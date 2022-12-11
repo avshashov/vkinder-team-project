@@ -15,6 +15,7 @@ class VkBot:
 
     '''Функция создания кнопок клавиатуры бота'''
     def keyboard_bot(self):
+        # pass
         emoji_info_user = emoji.emojize(":check_mark_button:")
         emoji_find_a_couple = emoji.emojize(":couple_with_heart_woman_man:")
         self.button_bot = VkKeyboard(one_time=False)
@@ -28,24 +29,32 @@ class VkBot:
     def reader(self):
         try:
             for self.event in VkLongPoll(self.vk_session).listen():
-                if self.event.type == VkEventType.MESSAGE_NEW and self.event.type == self.event.to_me:
+                if self.event.type == VkEventType.MESSAGE_NEW and self.event.to_me:
                     self.user_id = self.event.user_id
                     self.text = self.event.text.lower()
+                    if self.text == 'старт':
+                        self.sender(self.user_id, "Привет я просто бот!!!")
+                    elif self.text == 'заполнить данные о себе':
+                        self.add_info_user()
+                    elif self.text == 'найти пару':
+                        self.find_a_couple()
         except Exception as ex:
             print(ex)
 
     def hello(self):
-        self.reader()
-        if self.text in ['старт', 'начать', 'start']:
-            self.sender(self.user_id, "Привет я просто бот!!!")
-        elif self.text == 'заполнить данные о себе':
-            self.add_info_user()
-        elif self.text == 'найти пару':
-            self.find_a_couple()
+        pass
+        # self.reader(text=msg)
+        # if self.text == 'старт':
+        #     self.sender(self.user_id, "Привет я просто бот!!!")
+        # elif self.text == 'заполнить данные о себе':
+        #     self.add_info_user()
+        # elif self.text == 'найти пару':
+        #     self.find_a_couple()
+
 
     '''функция ответа на сообщения'''
     def sender(self, user_id, message, keyboard=None):
-        self.params = {'user_id': user_id, 'message': message, 'random_id': randrange(10 ** 7),}
+        self.params = {'user_id': user_id, 'message': message, 'random_id': randrange(10 ** 7)}
         if keyboard != None:
             keyboard = self.keyboard_bot()
             self.params['keyboard'] = keyboard
@@ -53,76 +62,78 @@ class VkBot:
 
     '''функция заполнения данных о пользователе (взаимодействует с модулем обращений к БД)'''
     def add_info_user(self):#логику нужно доработать
-        while True:
-            self.sender(self.user_id, 'Ведите имя: ')
-            self.reader()
-            if self.text != '':
-                self.name = self.text
-                break
-            else:
-                print('Ведите имя повторно')
-        while True:
-            self.sender(self.user_id, 'Ведите фамилию: ')
-            self.reader()
-            if self.text != '':
-                self.lost_name = self.text
-                break
-            else:
-                print('Ведите фамилию повторно')
-        while True:
-            self.sender(self.user_id, 'Укажите ваш пол: ')
-            self.reader()
-            if self.text == 'женский' or 'мужской':
-                self.gender = self.text
-                break
-            else:
-                print('Ведите данные повторно')
-        while True:
-            self.sender(self.user_id, 'Ваш возраст(цифрой): ')
-            self.reader()
-            if self.text.isdigit():
-                self.age = self.text
-                break
-            else:
-                print('Ведите данные повторно')
-        while True:
-            self.sender(self.user_id, 'Ведите название города: ')
-            self.reader()
-            if self.text != '':
-                self.city = self.text
-                break
-            else:
-                print('Ведите город повторно')
+        pass
+        # while True:
+        #     self.sender(self.user_id, 'Ведите имя: ')
+        #     self.reader()
+        #     if self.text != '':
+        #         self.name = self.text
+        #         break
+        #     else:
+        #         print('Ведите имя повторно')
+        # while True:
+        #     self.sender(self.user_id, 'Ведите фамилию: ')
+        #     self.reader()
+        #     if self.text != '':
+        #         self.lost_name = self.text
+        #         break
+        #     else:
+        #         print('Ведите фамилию повторно')
+        # while True:
+        #     self.sender(self.user_id, 'Укажите ваш пол: ')
+        #     self.reader()
+        #     if self.text in ['женский', 'мужской']:
+        #         self.gender = self.text
+        #         break
+        #     else:
+        #         print('Ведите данные повторно')
+        # while True:
+        #     self.sender(self.user_id, 'Ваш возраст(цифрой): ')
+        #     self.reader()
+        #     if self.text.isdigit():
+        #         self.age = self.text
+        #         break
+        #     else:
+        #         print('Ведите данные повторно')
+        # while True:
+        #     self.sender(self.user_id, 'Ведите название города: ')
+        #     self.reader()
+        #     if self.text != '':
+        #         self.city = self.text
+        #         break
+        #     else:
+        #         print('Ведите город повторно')
         #далее запуск модуля взаимодействия с БД
 
 
     '''Функция поиска пары (взаимодействует с модулем обращений к БД)'''
     def find_a_couple(self):
-        self.sender(self.user_id, 'Задайте критерии для поиска: ')
-        while True:
-            self.sender(self.user_id, 'Укажите пол: ')
-            self.reader()
-            if self.text == 'женский' or 'мужской':
-                self.search_gender = self.text
-                break
-            else:
-                print('Ведите данные повторно')
-        while True:
-            self.sender(self.user_id, 'Возраст(цифрой): ')#доработать логику диапозоном возраста
-            self.reader()
-            if self.text.isdigit():
-                self.search_age = self.text
-                break
-            else:
-                print('Ведите данные повторно')
-        while True:
-            self.sender(self.user_id, 'Город для поиска: ')
-            self.reader()
-            if self.text != '':
-                self.city = self.text
-                break
-            else:
-                print('Ведите город повторно')
+        pass
+        # self.sender(self.user_id, 'Задайте критерии для поиска: ')
+        # while True:
+        #     self.sender(self.user_id, 'Укажите пол: ')
+        #     self.reader()
+        #     if self.text == 'женский' or 'мужской':
+        #         self.search_gender = self.text
+        #         break
+        #     else:
+        #         print('Ведите данные повторно')
+        # while True:
+        #     self.sender(self.user_id, 'Возраст(цифрой): ')#доработать логику диапозоном возраста
+        #     self.reader()
+        #     if self.text.isdigit():
+        #         self.search_age = self.text
+        #         break
+        #     else:
+        #         print('Ведите данные повторно')
+        # while True:
+        #     self.sender(self.user_id, 'Город для поиска: ')
+        #     self.reader()
+        #     if self.text != '':
+        #         self.city = self.text
+        #         break
+        #     else:
+        #         print('Ведите город повторно')
             # далее запуск модуля взаимодействия с БД
 
 
@@ -136,9 +147,9 @@ class VkBot:
 
     '''Функция получения результатов поиска '''
     def search_result(self):
-        search_lst = [] # список id найденных пользователей передается из модуля взаимодействия с БД
-        return search_lst
-
+        # search_lst = [] # список id найденных пользователей передается из модуля взаимодействия с БД
+        # return search_lst
+        pass
 
 
 
