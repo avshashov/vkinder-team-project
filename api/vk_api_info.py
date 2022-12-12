@@ -7,7 +7,7 @@ class VkInfo:
     def __init__(self, vk_group_token):
         self.vk_session = vk_api.VkApi(token=vk_group_token)
 
-
+    '''Функция получения информации о пользоваетеле с его аккаунта ВК'''
     def get_info(self):
         self.id_lst = vk_bot.VkBot.search_result()
         for item in self.id_lst:
@@ -19,8 +19,8 @@ class VkInfo:
             self.info_json = self.req['response']
             return self.info_json
 
-
-    def photos_get(self, count=10):
+    '''Функция получения фото пользователя'''
+    def photos_get(self, count=3):
         self.id_lst = vk_bot.VkBot.search_result()
         for item in self.id_lst:
             owner_id = item
