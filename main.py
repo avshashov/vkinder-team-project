@@ -1,5 +1,5 @@
-import vk_bot
-from vk_bot import VkBot
+from api import vk_bot
+
 
 def main():
     vk_bot.VkBot()

@@ -1,11 +1,24 @@
 import vk_api
-from vk_api.longpoll import VkLongPoll, VkEventType
 from config import vk_group_token
 import vk_bot
 
 class VkInfo:
+
     def __init__(self, vk_group_token):
         self.vk_session = vk_api.VkApi(token=vk_group_token)
+
+
+    def get_info(self):
+        self.id_lst = vk_bot.VkBot.search_result()
+        for item in self.id_lst:
+            user_ids = item
+            self.req = self.vk_session.method('users.get', {
+            'user_ids': user_ids,
+            'fields': 'screen_name, city, bdate, sex, relation',
+            }).json
+            self.info_json = self.req['response']
+            return self.info_json
+
 
     def photos_get(self, count=10):
         self.id_lst = vk_bot.VkBot.search_result()
@@ -18,12 +31,12 @@ class VkInfo:
                 'extended': 'likes',
                 'photo_sizes': '1',
             }).json
-            self.req_json = self.req['response']['items']
-        return self.req_json
+            self.photo_json = self.req['response']['items']
+        return self.photo_json
 
 def main():
     vk_info_user = VkInfo(vk_group_token)
-    vk_info_user.photos_get()
+    # vk_info_user.photos_get()
 
 
 if __name__ == '__main__':
