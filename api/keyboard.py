@@ -5,7 +5,7 @@ from api.keyboard_setings import settings
 class UserKeyboard:
 
     def __init__(self):
-        print('init')
+        pass
 
     @staticmethod
     def keyboard_menu():

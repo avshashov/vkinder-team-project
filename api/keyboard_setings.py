@@ -13,7 +13,7 @@ keyboard_cmd = {
              'key': 'previous',
              'keyboard': 'search'},
     'hello': { 'in': ['hello', 'привет', 'hello', 'hi', 'privet', 'hey'],
-              'out': ['Приветствую', 'Здравствуйте', 'Привет!'],
+              'out': ['Приветствую!', 'Здравствуйте!', 'Привет!'],
               'key': 'helloo',
               'keyboard': 'menu' },
     'menu': { 'in': ['back', 'назад', 'меню'],
@@ -33,7 +33,7 @@ keyboard_cmd = {
              'key': 'favorites',
              'keyboard': 'menu'},
     'none': {'in': [],
-             'out': ['Я знаю команды:\n привет\n поиск\n следующий\n предыдущий\n избранное\n черный список'],
+             'out': ['Команды которые знает бот:\n привет\n поиск\n следующий\n предыдущий\n избранное\n черный список'],
              'key': 'none',
              'keyboard': 'menu'}
 }
