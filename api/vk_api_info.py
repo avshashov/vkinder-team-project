@@ -16,7 +16,7 @@ class VkInfo:
                 user_ids = item
                 self.req = self.vk_session.method('users.get', {
                 'user_ids': user_ids,
-                'fields': 'screen_name, city, bdata, sex, relation',
+                'fields': 'city, bdata, sex, relation',
                 }).json
                 self.info_json = self.req['response']
             return self.info_json
@@ -52,9 +52,7 @@ class VkInfo:
             if params:
                 if params.get('city'):
                     city = params.get('city').get('title')
-                if params.get('bdate'):
-                    bdata = params.get('bdate')
-                content = f'\n[id{id_}|{params.get("first_name")} {params.get("last_name")}] {city} {bdata}'
+                content = f'\n[id{id_}|{params.get("first_name")} {params.get("last_name")}] {city} '
                 photos = self.photos_get(3)
                 if photos.get('response') is not None:
                     items = photos['response']['items']

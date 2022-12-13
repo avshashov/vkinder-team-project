@@ -9,7 +9,6 @@ class UserKeyboard:
 
     @staticmethod
     def keyboard_menu():
-
         search = emoji.emojize(":growing_heart:")
         star = emoji.emojize(":glowing_star:")
         black_lst = emoji.emojize(":black_nib:")
@@ -41,9 +40,9 @@ class UserKeyboard:
     @staticmethod
     def get_keyboard(type_keyboard: str):
         if type_keyboard == 'menu':
-            keyboard = UserKeyboard.menu()
+            keyboard = UserKeyboard.keyboard_menu()
         elif type_keyboard == 'search':
-            keyboard = UserKeyboard.search()
+            keyboard = UserKeyboard.keyboard_search()
         else:
-            keyboard = UserKeyboard.menu()
+            keyboard = UserKeyboard.keyboard_menu()
         return keyboard.get_keyboard()

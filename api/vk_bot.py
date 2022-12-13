@@ -3,6 +3,7 @@ import vk_api
 from vk_api.longpoll import VkLongPoll, VkEventType
 from config import vk_group_token
 
+
 '''Создаем класс бота'''
 class VkBot:
     def __init__(self, vk_group_token):
@@ -32,7 +33,7 @@ class VkBot:
 
 
     '''Функция добавления в черный список (взаимодействует с модулем обращений к БД)'''
-    def add_black_lst(self):
+    def add_black_lst(self, user_id):
         pass
 
     '''Функция добавления в избранное (взаимодействует с модулем обращений к БД)'''

@@ -1,3 +1,6 @@
+callback_typs = ('show_snackbar', 'open_link', 'open_app')
+settings = dict(one_time=False, inline=False)
+
 
 keyboard_cmd = {
     'search': {'in': ['search', 'поиск', 'искать', 'найти'],
@@ -37,4 +40,3 @@ keyboard_cmd = {
              'key': 'none',
              'keyboard': 'menu'}
 }
-settings = keyboard_cmd(one_time=False, inline=False)
