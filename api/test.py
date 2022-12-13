@@ -1,5 +1,6 @@
 from random import randrange
 import vk_api
+import random
 from vk_api.longpoll import VkLongPoll, VkEventType
 from config import vk_group_token, group_id
 from keyboard import UserKeyboard
@@ -12,6 +13,10 @@ class VkBot:
     def __init__(self, vk_group_token):
         self.vk_session = vk_api.VkApi(token=vk_group_token)
 
+    def get_msg(self, cmd):
+        self.msg = f'{random.choice(cmd["out"])} {cmd.get("content")}'
+        return self.msg
+
     '''Функция по распознованию сообщений и событий'''
     def reader(self):
         try:
@@ -22,21 +27,21 @@ class VkBot:
                         self.vk_session.method('messages.send',
                                                {
                                                    'user_id': event.user_id,
-                                                   'message': 'Меню бота!',
+                                                   'message': self.get_msg(keyboard_cmd),
                                                    'random_id': randrange(10 ** 7),
                                                    'keyboard': UserKeyboard.get_keyboard(type_keyboard='menu')
                                                }
                                                )
 
-                    elif event.text in keyboard_cmd['search']['in']:
-                        self.vk_session.method('messages.send',
-                                               {
-                                                   'user_id': event.user_id,
-                                                   'message': "Нашли!\n",
-                                                   'random_id': randrange(10 ** 7),
-                                                   'keyboard': UserKeyboard.get_keyboard(type_keyboard='search')
-                                               }
-                                               )
+                    # elif event.text in keyboard_cmd['search']['in']:
+                    #     self.vk_session.method('messages.send',
+                    #                            {
+                    #                                'user_id': event.user_id,
+                    #                                'message': "Нашли!\n",
+                    #                                'random_id': randrange(10 ** 7),
+                    #                                'keyboard': UserKeyboard.get_keyboard(type_keyboard='search')
+                    #                            }
+                    #                            )
 
         except Exception as ex:
             print(ex)
