@@ -139,16 +139,3 @@ class VkinderDB:
         return res
 
 
-# add_new_user(conn, 11111, 'Иван', 'Иванов', 'мужской', 26, 'Москва', 'ссылка', 'ссылка1,ссылка2,ссылка3')
-
-data = {'user_id': 77772, 'name': 'Лупа', 'surname': 'Пупа',
-        'sex': 'мужской', 'age': 59, 'city': 'Tomsk', 'url': 'ссылка 51',
-        'photos': 'photo1,photo2,photo3'}
-
-params = {'user_id': 77772, 'from_age': 28, 'to_age': '35',
-          'sex': 'женский', 'city': 'Tomsk'}
-db = VkinderDB()
-# db.add_new_user(data)
-# db.add_search_params(params)
-print(db.find_a_couple(11111))
-print(db.find_a_couple(22222))
