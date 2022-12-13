@@ -1,25 +1,33 @@
 CREATE TABLE users
 (
-    user_id int PRIMARY KEY,
-    name    varchar(20) NOT NULL,
-    surname varchar(20) NOT NULL,
-    sex     varchar(7)  NOT NULL,
-    age     int,
-    city    varchar(20) NOT NULL
+    user_id INT PRIMARY KEY,
+    name    VARCHAR(20) NOT NULL,
+    surname VARCHAR(20) NOT NULL,
+    sex     CHAR(7)     NOT NULL,
+    age     INT,
+    city    VARCHAR(20) NOT NULL,
+    url     TEXT NOT NULL
+);
+
+CREATE TABLE user_photos
+(
+    id       SERIAL PRIMARY KEY,
+    user_id  INT REFERENCES users (user_id),
+    photo_ids TEXT
 );
 
 CREATE TABLE search_params
 (
-    user_id  int PRIMARY KEY,
-    from_age int         NOT NULL,
-    to_age   int         NOT NULL,
-    sex      varchar(7)  NOT NULL,
-    city     varchar(20) NOT NULL
+    user_id  INT PRIMARY KEY,
+    from_age INT         NOT NULL,
+    to_age   INT         NOT NULL,
+    sex      VARCHAR(7)  NOT NULL,
+    city     VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE favorites_users
 (
-    id         serial PRIMARY KEY,
-    finder_id  int REFERENCES users (user_id),
-    partner_id int REFERENCES users (user_id)
+    id         SERIAL PRIMARY KEY,
+    finder_id  INT REFERENCES users (user_id),
+    partner_id INT REFERENCES users (user_id)
 );
