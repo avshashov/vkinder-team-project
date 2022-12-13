@@ -3,7 +3,7 @@ settings = dict(one_time=False, inline=False)
 
 
 keyboard_cmd = {
-    'search': {'in': ['search', 'поиск', 'искать', 'найти'],
+    'search': {'in': ['search', 'поиск'],
               'out': ['Я нашел'],
               'key': 'search',
               'keyboard': 'search'},
@@ -15,7 +15,7 @@ keyboard_cmd = {
              'out': ['Предыдущий'],
              'key': 'previous',
              'keyboard': 'search'},
-    'hello': { 'in': ['hello', 'привет', 'hello', 'hi', 'privet', 'hey'],
+    'hello': { 'in': ['hello', 'привет'],
               'out': ['Приветствую!', 'Здравствуйте!', 'Привет!'],
               'key': 'helloo',
               'keyboard': 'menu' },
