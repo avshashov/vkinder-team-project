@@ -111,7 +111,6 @@ def find_a_couple(connect, user_id):
                     """, (user_id,)
                     )
         search_params = cur.fetchone()
-        # print(cur.fetchone())
 
         cur.execute("""
                         SELECT name, surname, age, url, photo_ids
@@ -123,7 +122,8 @@ def find_a_couple(connect, user_id):
                               AND city = %s;
                     """, (user_id, *search_params)
                     )
-        print(cur.fetchall())
+        res = cur.fetchall()
+    return res
 
 
 conn = psycopg2.connect(database='vkinder', user=USER, password=PASSWORD)
