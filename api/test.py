@@ -15,22 +15,28 @@ class VkBot:
     '''Функция по распознованию сообщений и событий'''
     def reader(self):
         try:
-            for self.event in VkLongPoll(self.vk_session, group_id=group_id).listen():
+            for event in VkLongPoll(self.vk_session, group_id=group_id).listen():
                 #обработчик сообщений
-                if self.event.type == VkEventType.MESSAGE_NEW and self.event.to_me:
-                    if self.event.text != '':
+                if event.type == VkEventType.MESSAGE_NEW and event.to_me:
+                    if event.text != '':
                         self.vk_session.method('messages.send',
                                                {
-                                                   'user_id': self.event.user_id,
-                                                   'message': self.event.text,
+                                                   'user_id': event.user_id,
+                                                   'message': 'Меню бота!',
                                                    'random_id': randrange(10 ** 7),
                                                    'keyboard': UserKeyboard.get_keyboard(type_keyboard='menu')
                                                }
                                                )
-                # обработчик событий с кнопок
-                # elif self.event.type == VkEventType.MESSAGE_NEW:
 
-
+                    elif event.text in keyboard_cmd['search']['in']:
+                        self.vk_session.method('messages.send',
+                                               {
+                                                   'user_id': event.user_id,
+                                                   'message': "Нашли!\n",
+                                                   'random_id': randrange(10 ** 7),
+                                                   'keyboard': UserKeyboard.get_keyboard(type_keyboard='search')
+                                               }
+                                               )
 
         except Exception as ex:
             print(ex)

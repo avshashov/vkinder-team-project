@@ -35,7 +35,7 @@ keyboard_cmd = {
              'out': ['Избранное'],
              'key': 'favorites',
              'keyboard': 'menu'},
-    'none': {'in': [],
+    'none': {'in': [''],
              'out': ['Команды которые знает бот:\n привет\n поиск\n следующий\n предыдущий\n избранное\n черный список'],
              'key': 'none',
              'keyboard': 'menu'}

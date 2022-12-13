@@ -13,7 +13,7 @@ class UserKeyboard:
         star = emoji.emojize(":glowing_star:")
         black_lst = emoji.emojize(":black_nib:")
         keyboard = VkKeyboard(**settings)
-        keyboard.add_callback_button(label=f'{search}Поиск', color=VkKeyboardColor.POSITIVE, payload={"type": "search", "text": "Ищем"})
+        keyboard.add_callback_button(label=f'{search}Поиск', color=VkKeyboardColor.POSITIVE, payload={"type": "search", "text": "Поиск"})
         keyboard.add_line()
         keyboard.add_callback_button(label=f'{star}Избранное', color=VkKeyboardColor.POSITIVE, payload={"type": "favorites", "text": "Избранное"})
         keyboard.add_callback_button(label=f'{black_lst}Чёрный список', color=VkKeyboardColor.POSITIVE, payload={"type": "black_list", "text": "Черный список"})
