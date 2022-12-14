@@ -1,12 +1,12 @@
 from random import randrange
 import vk_api
 from vk_api.longpoll import VkLongPoll, VkEventType
-from config import vk_group_token
+from config import gr_token, vk_group_token
 
 
 '''Создаем класс бота'''
 class VkBot:
-    def __init__(self, vk_group_token):
+    def __init__(self, token):
         self.vk_session = vk_api.VkApi(token=vk_group_token)
 
     '''Функция по распознованию сообщений и user_id. '''
