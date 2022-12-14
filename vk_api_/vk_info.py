@@ -2,7 +2,7 @@
 # import requests
 # from vkinderdb.db_functions import VkinderDB
 # # from vkinderdb import db_auth
-# # from vk_auth import TOKEN
+# from config import gr_token as TOKEN
 #
 #
 # class VKInfo:
@@ -106,5 +106,5 @@
 # user_data = vk.get_user_info()
 # user_photo = vk.get_photos()
 #
-# db = VkinderDB(db_auth.USER, db_auth.PASSWORD)
-# db.add_new_user(user_data, user_photo)
+# # db = VkinderDB(db_auth.USER, db_auth.PASSWORD)
+# # db.add_new_user(user_data, user_photo)

@@ -9,13 +9,13 @@ from config import vk_group_token, gr_token
 from keyboard import UserKeyboard
 from keyboard_setings import keyboard_cmd
 from vkinderdb import main, db_functions
-# from vk_api_.vk_info import VKInfo
+
 
 
 '''Создаем класс бота'''
 class VkBot:
     def __init__(self, token):
-        self.vk_session = vk_api.VkApi(token=gr_token)
+        self.vk_session = vk_api.VkApi(token=vk_group_token)
 
     '''Функция по распознованию сообщений и user_id. '''
 
@@ -27,12 +27,13 @@ class VkBot:
 
     def reader(self):
         try:
-            for event in VkLongPoll(self.vk_session).listen():
+            for self.event in VkLongPoll(self.vk_session).listen():
                 # обработчик сообщений
-                if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                    if event.text == 'старт':
-                        self.sender(event.user_id, self.get_msg(keyboard_cmd), UserKeyboard.get_keyboard(type_keyboard='menu'))
-                        # vk_api_.vk_info.VKInfo.get_user_info()
+                if self.event.type == VkEventType.MESSAGE_NEW and self.event.to_me:
+                    if self.event.text == 'старт':
+                        self.sender(self.event.user_id, 'Привет', UserKeyboard.get_keyboard(type_keyboard='menu'))
+                        vk_api_.vk_info.VKInfo.get_user_info()
+                        # vk_api_.vk_info.VKInfo.get_photos()
         except Exception as ex:
             print(ex)
 
@@ -63,7 +64,7 @@ class VkBot:
 
 
 def main():
-    vk_client = VkBot(gr_token)
+    vk_client = VkBot(vk_group_token)
     vk_client.reader()
 
 
