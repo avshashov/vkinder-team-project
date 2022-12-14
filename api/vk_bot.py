@@ -1,7 +1,13 @@
 from random import randrange
 import vk_api
+import random
 from vk_api.longpoll import VkLongPoll, VkEventType
-from config import gr_token, vk_group_token
+
+import vkinderdb.db_functions
+from config import vk_group_token
+from keyboard import UserKeyboard
+from keyboard_setings import keyboard_cmd
+from vkinderdb import main, db_functions
 
 
 '''Создаем класс бота'''
@@ -10,17 +16,30 @@ class VkBot:
         self.vk_session = vk_api.VkApi(token=vk_group_token)
 
     '''Функция по распознованию сообщений и user_id. '''
+
+    def get_msg(self, cmd):
+        self.msg = f'{random.choice(cmd["out"])} {cmd.get("content")}'
+        return self.msg
+
+    '''Функция по распознованию сообщений и событий'''
+
     def reader(self):
         try:
-            for self.event in VkLongPoll(self.vk_session).listen():
-                if self.event.type == VkEventType.MESSAGE_NEW and self.event.to_me:
-                    self.user_id = self.event.user_id
-                    self.text = self.event.text.lower()
-                    if self.text == 'старт':
-                        self.sender(self.user_id, "Привет я просто бот!!!")
+            for event in VkLongPoll(self.vk_session).listen():
+                # обработчик сообщений
+                if event.type == VkEventType.MESSAGE_NEW and event.to_me:
+                    if event.text != '':
+                        self.vk_session.method('messages.send',
+                                               {
+                                                   'user_id': event.user_id,
+                                                   'message': self.get_msg(keyboard_cmd),
+                                                   'random_id': randrange(10 ** 7),
+                                                   'keyboard': UserKeyboard.get_keyboard(type_keyboard='menu')
+                                               }
+                                               )
+                        vkinderdb.db_functions.VkinderDB.add_new_user(event.user_id)
         except Exception as ex:
             print(ex)
-
 
     '''функция ответа на сообщения'''
     def sender(self, user_id, message):

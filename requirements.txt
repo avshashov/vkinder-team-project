@@ -3,3 +3,4 @@ tqdm
 vk_api
 emoji
 vktools
+psycopg
