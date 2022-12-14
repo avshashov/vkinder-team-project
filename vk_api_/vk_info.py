@@ -106,5 +106,5 @@ vk = VKInfo(TOKEN, 268278600)
 user_data = vk.get_user_info()
 user_photo = vk.get_photos()
 
-db = VkinderDB(db_auth.USER, db_auth.PASSWORD)
-db.add_new_user(user_data, user_photo)
+# db = VkinderDB(db_auth.USER, db_auth.PASSWORD)
+# db.add_new_user(user_data, user_photo)
