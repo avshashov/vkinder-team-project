@@ -1,7 +1,7 @@
 from random import randrange
-import vk_api
+import vk_api_
 import random
-from vk_api.longpoll import VkLongPoll, VkEventType
+from vk_api_.longpoll import VkLongPoll, VkEventType
 from config import vk_group_token, gr_token
 from keyboard import UserKeyboard
 from keyboard_setings import keyboard_cmd
@@ -11,7 +11,7 @@ from keyboard_setings import keyboard_cmd
 '''Создаем класс бота'''
 class VkBot:
     def __init__(self, token):
-        self.vk_session = vk_api.VkApi(token=gr_token)
+        self.vk_session = vk_api_.VkApi(token=gr_token)
 
     def get_msg(self, cmd):
         self.msg = f'{random.choice(cmd["out"])} {cmd.get("content")}'

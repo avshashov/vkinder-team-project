@@ -2,11 +2,14 @@ from random import randrange
 import vk_api
 import random
 from vk_api.longpoll import VkLongPoll, VkEventType
+
+import vk_api_.vk_info
 import vkinderdb.db_functions
 from config import vk_group_token, gr_token
 from keyboard import UserKeyboard
 from keyboard_setings import keyboard_cmd
 from vkinderdb import main, db_functions
+# from vk_api_.vk_info import VKInfo
 
 
 '''Создаем класс бота'''
@@ -24,12 +27,12 @@ class VkBot:
 
     def reader(self):
         try:
-            for self.event in VkLongPoll(self.vk_session).listen():
+            for event in VkLongPoll(self.vk_session).listen():
                 # обработчик сообщений
-                if self.event.type == VkEventType.MESSAGE_NEW and self.event.to_me:
-                    if self.event.text != '':
-                        self.sender(self, self.event.user_id, self.get_msg(keyboard_cmd), UserKeyboard.get_keyboard(keyboard_cmd['keyboard']))
-                        # vkinderdb.db_functions.VkinderDB.add_new_user(event.user_id)
+                if event.type == VkEventType.MESSAGE_NEW and event.to_me:
+                    if event.text == 'старт':
+                        self.sender(event.user_id, self.get_msg(keyboard_cmd), UserKeyboard.get_keyboard(type_keyboard='menu'))
+                        # vk_api_.vk_info.VKInfo.get_user_info()
         except Exception as ex:
             print(ex)
 
