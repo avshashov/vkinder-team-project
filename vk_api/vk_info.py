@@ -21,7 +21,7 @@ class VKInfo:
                 print('[ERROR] Для корректной работы приложения сделайте профиль открытым :)')
 
             else:
-                user_id = user_json['response'][0]['id']
+                self.id = user_json['response'][0]['id']
                 name = user_json['response'][0]['first_name']
                 surname = user_json['response'][0]['last_name']
                 sex = 'Женский' if user_json['response'][0]['sex'] == 1 else 'Мужской'
@@ -30,7 +30,7 @@ class VKInfo:
                 age = self._age_format(self._parse_bdate(user_json))
 
                 user_data = {
-                    'user_id:': user_id, 'name': name,
+                    'user_id:': self.id, 'name': name,
                     'surname': surname, 'sex': sex,
                     'age': age, 'city': city,
                     'url': url
@@ -71,20 +71,34 @@ class VKInfo:
         photo_params = {'owner_id': self.id, 'album_id': 'profile',
                         'extended': 1}
 
-        response = requests.get(url, params={**self.params, **photo_params})
-        print(response.json())
+        try:
+            photos_json = requests.get(url, params={**self.params, **photo_params}).json()
+
+            # Возможна долгая отработка цикла при большом количестве фоток, оптимизировать
+            photos = [{'media_id': photo['id'], 'likes_count': photo['likes']['count']} for photo in
+                      photos_json['response']['items']]
+            photos = sorted(photos, key=lambda photo: photo['likes_count'], reverse=True)[:3]
+            attachment = self._photo_processing(photos)
+
+            print(attachment)
+            return (attachment)
+
+        except Exception as ex:
+            print(f'[ERROR] {ex}')
+
+    def _photo_processing(self, photos):
+        res = ','.join([f"{'photo'}{self.id}_{photo['media_id']}" for photo in photos])
+        return res
 
 
 # vk = VKInfo(TOKEN, 'loli_katze')
 # vk = VKInfo(TOKEN, 'marialldl')
 # vk = VKInfo(TOKEN, 'murz727')
 # vk = VKInfo(TOKEN, 'borodina_y')
-vk = VKInfo(TOKEN, 108062987)
+# vk = VKInfo(TOKEN, 108062987)
 # vk = VKInfo(TOKEN, 'yvkey')
-# vk.get_user_info()
+vk = VKInfo(TOKEN, 80821257)
+vk.get_user_info()
 vk.get_photos()
 
 
-def photos_get(count=3):
-    '''Функция получения фото пользователя'''
-    pass
