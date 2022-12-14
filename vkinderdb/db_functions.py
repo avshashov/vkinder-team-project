@@ -1,8 +1,8 @@
-import psycopg2
+import psycopg
 
 class VkinderDB:
     def __init__(self, user, password):
-        self.connect = psycopg2.connect(database='vkinder', user=user, password=password)
+        self.connect = psycopg.connect(database='vkinder', user=user, password=password)
 
     def add_new_user(self, user_data, photos):
         '''Добавить/обновить пользователя в БД.'''

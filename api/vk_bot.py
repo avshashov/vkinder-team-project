@@ -2,9 +2,8 @@ from random import randrange
 import vk_api
 import random
 from vk_api.longpoll import VkLongPoll, VkEventType
-
 import vkinderdb.db_functions
-from config import vk_group_token
+from config import vk_group_token, gr_token
 from keyboard import UserKeyboard
 from keyboard_setings import keyboard_cmd
 from vkinderdb import main, db_functions
@@ -13,7 +12,7 @@ from vkinderdb import main, db_functions
 '''Создаем класс бота'''
 class VkBot:
     def __init__(self, token):
-        self.vk_session = vk_api.VkApi(token=vk_group_token)
+        self.vk_session = vk_api.VkApi(token=gr_token)
 
     '''Функция по распознованию сообщений и user_id. '''
 
@@ -25,24 +24,17 @@ class VkBot:
 
     def reader(self):
         try:
-            for event in VkLongPoll(self.vk_session).listen():
+            for self.event in VkLongPoll(self.vk_session).listen():
                 # обработчик сообщений
-                if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                    if event.text != '':
-                        self.vk_session.method('messages.send',
-                                               {
-                                                   'user_id': event.user_id,
-                                                   'message': self.get_msg(keyboard_cmd),
-                                                   'random_id': randrange(10 ** 7),
-                                                   'keyboard': UserKeyboard.get_keyboard(type_keyboard='menu')
-                                               }
-                                               )
-                        vkinderdb.db_functions.VkinderDB.add_new_user(event.user_id)
+                if self.event.type == VkEventType.MESSAGE_NEW and self.event.to_me:
+                    if self.event.text != '':
+                        self.sender(self, self.event.user_id, self.get_msg(keyboard_cmd), UserKeyboard.get_keyboard(keyboard_cmd['keyboard']))
+                        # vkinderdb.db_functions.VkinderDB.add_new_user(event.user_id)
         except Exception as ex:
             print(ex)
 
     '''функция ответа на сообщения'''
-    def sender(self, user_id, message):
+    def sender(self, user_id, message, keyboard=None):
         self.params = {'user_id': user_id, 'message': message, 'random_id': randrange(10 ** 7)}
         self.vk_session.method('messages.send', self.params)
 
@@ -68,7 +60,7 @@ class VkBot:
 
 
 def main():
-    vk_client = VkBot(vk_group_token)
+    vk_client = VkBot(gr_token)
     vk_client.reader()
 
 
