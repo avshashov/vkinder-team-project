@@ -1,5 +1,7 @@
 from datetime import datetime
 import requests
+from vkinderdb.db_functions import VkinderDB
+from vkinderdb import db_auth
 from vk_auth import TOKEN
 
 
@@ -30,7 +32,7 @@ class VKInfo:
                 age = self._age_format(self._parse_bdate(user_json))
 
                 user_data = {
-                    'user_id:': self.id, 'name': name,
+                    'user_id': self.id, 'name': name,
                     'surname': surname, 'sex': sex,
                     'age': age, 'city': city,
                     'url': url
@@ -80,7 +82,7 @@ class VKInfo:
             photos = sorted(photos, key=lambda photo: photo['likes_count'], reverse=True)[:3]
             attachment = self._photo_processing(photos)
 
-            print(attachment)
+            print(attachment)  # удалить строку
             return (attachment)
 
         except Exception as ex:
@@ -97,8 +99,12 @@ class VKInfo:
 # vk = VKInfo(TOKEN, 'borodina_y')
 # vk = VKInfo(TOKEN, 108062987)
 # vk = VKInfo(TOKEN, 'yvkey')
-vk = VKInfo(TOKEN, 80821257)
-vk.get_user_info()
-vk.get_photos()
+# vk = VKInfo(TOKEN, 80821257)
+# vk = VKInfo(TOKEN, 1559980)
 
+vk = VKInfo(TOKEN, 268278600)
+user_data = vk.get_user_info()
+user_photo = vk.get_photos()
 
+db = VkinderDB(db_auth.USER, db_auth.PASSWORD)
+db.add_new_user(user_data, user_photo)
