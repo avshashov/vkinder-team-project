@@ -3,12 +3,12 @@ from db_auth import USER, PASSWORD
 
 
 class VkinderDB:
-    conn = psycopg2.connect(database='vkinder', user=USER, password=PASSWORD)
+    connect = psycopg2.connect(database='vkinder', user=USER, password=PASSWORD)
 
     def add_new_user(self, user_data):
         '''Добавить/обновить пользователя в БД.'''
-        with VkinderDB.conn:
-            with VkinderDB.conn.cursor() as cur:
+        with VkinderDB.connect as conn:
+            with conn.cursor() as cur:
                 cur.execute("""
                             SELECT user_id
                             FROM users
@@ -50,8 +50,8 @@ class VkinderDB:
 
     def add_search_params(self, params):
         '''Добавить/обновить критерии поиска пары.'''
-        with VkinderDB.conn:
-            with VkinderDB.conn.cursor() as cur:
+        with VkinderDB.connect as conn:
+            with conn.cursor() as cur:
                 cur.execute("""
                                 SELECT user_id
                                 FROM search_params
@@ -78,8 +78,8 @@ class VkinderDB:
 
     def add_to_favorites(self, finder_id, partner_id):
         '''Добавить пользователя в избранное.'''
-        with VkinderDB.conn:
-            with VkinderDB.conn.cursor() as cur:
+        with VkinderDB.connect as conn:
+            with conn.cursor() as cur:
                 cur.execute("""
                                 INSERT INTO favorites_users(finder_id, partner_id)
                                 VALUES (%s, %s);
@@ -88,8 +88,8 @@ class VkinderDB:
 
     def del_from_favorites(self, finder_id, partner_id):
         '''Удалить пользователя из избранного.'''
-        with VkinderDB.conn:
-            with VkinderDB.conn.cursor() as cur:
+        with VkinderDB.connect as conn:
+            with conn.cursor() as cur:
                 cur.execute("""
                                 DELETE FROM favorites_users
                                 WHERE finder_id = %s AND partner_id = %s;
@@ -98,8 +98,8 @@ class VkinderDB:
 
     def show_favorites_users(self, finder_id):
         '''Показать избранное.'''
-        with VkinderDB.conn:
-            with VkinderDB.conn.cursor() as cur:
+        with VkinderDB.connect as conn:
+            with conn.cursor() as cur:
                 cur.execute("""
                                 SELECT name, surname, url
                                 FROM users
@@ -115,8 +115,8 @@ class VkinderDB:
 
     def find_a_couple(connect, user_id):
         '''Найти пару'''
-        with VkinderDB.conn:
-            with VkinderDB.conn.cursor() as cur:
+        with VkinderDB.connect as conn:
+            with conn.cursor() as cur:
                 cur.execute("""
                                 SELECT from_age, to_age, sex, city
                                 FROM search_params
@@ -139,3 +139,4 @@ class VkinderDB:
         return res
 
 
+# db = VkinderDB()

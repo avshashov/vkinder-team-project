@@ -1,3 +1,4 @@
 .idea/
 vkinderdb/db_auth.py
 vkinderdb/datatest.py
+vk_api/vk_auth.py
