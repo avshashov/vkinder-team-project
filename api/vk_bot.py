@@ -1,6 +1,5 @@
 from random import randrange
 import vk_api
-import random
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from vk_api.longpoll import VkLongPoll, VkEventType
 import vk_api_.vk_info
@@ -47,13 +46,16 @@ class VkBot:
                             elif 'избранное' in self.event.object.payload.get('text'):
                                 self.add_favourites(self.event.object.user_id)
     def command_button(self):
-        content = ''
         key = keyboard_cmd.get('key')
-        if not key is None and key != 'none':
-            if key == 'search':
-                keyboard = UserKeyboard.keyboard_search()
-                self.sender(user_id=self.get_user_id(), message=key, keyboard=keyboard)
-                self.find_a_couple()
+        if key == 'search':
+            keyboard = UserKeyboard.keyboard_search()
+            self.vk_session.method('messages.sendMessageEventAnswer', {
+                'event_id': str,
+                'user_id': self.get_user_id(),
+                'peer_id': int
+            })
+            self.find_a_couple()
+
 
 
     '''функция ответа на сообщения'''
