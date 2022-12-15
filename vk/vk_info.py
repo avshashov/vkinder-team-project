@@ -75,7 +75,7 @@ class VKInfo:
 
         try:
             photos_json = requests.get(url, params={**self.params, **photo_params}).json()
-
+            # print(photos_json)
             # Возможна долгая отработка цикла при большом количестве фоток, оптимизировать
             photos = [{'media_id': photo['id'], 'likes_count': photo['likes']['count']} for photo in
                       photos_json['response']['items']]
@@ -92,7 +92,6 @@ class VKInfo:
         res = ','.join([f"{'photo'}{self.id}_{photo['media_id']}" for photo in photos])
         return res
 
-
 # vk = VKInfo(TOKEN, 'loli_katze')
 # vk = VKInfo(TOKEN, 'marialldl')
 # vk = VKInfo(TOKEN, 'murz727')
@@ -102,9 +101,9 @@ class VKInfo:
 # vk = VKInfo(TOKEN, 80821257)
 # vk = VKInfo(TOKEN, 1559980)
 
-vk = VKInfo(TOKEN, 268278600)
-user_data = vk.get_user_info()
-user_photo = vk.get_photos()
+# vk = VKInfo(TOKEN, 268278600)
+# user_data = vk.get_user_info()
+# user_photo = vk.get_photos()
 
 # db = VkinderDB(db_auth.USER, db_auth.PASSWORD)
 # db.add_new_user(user_data, user_photo)
