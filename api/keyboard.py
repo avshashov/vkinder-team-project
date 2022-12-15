@@ -24,13 +24,13 @@ class UserKeyboard:
     @staticmethod
     def keyboard_search():
         left_arrow = emoji.emojize(":left_arrow:")
-        right_arrow = emoji.emojize(":left_arrow:")
+        right_arrow = emoji.emojize(":right_arrow:")
         star = emoji.emojize(":glowing_star:")
         black_lst = emoji.emojize(":black_nib:")
         keyboard = VkKeyboard(**settings)
         keyboard.add_callback_button(label=f'{left_arrow}Предыдущий', color=VkKeyboardColor.PRIMARY, payload={"type": "previous", "text": "Ищем"})
-        keyboard.add_line()
         keyboard.add_callback_button(label=f'{right_arrow}Следующий', color=VkKeyboardColor.PRIMARY, payload={"type": "next", "text": "Ищем"})
+        keyboard.add_line()
         keyboard.add_callback_button(label=f'{star}В избранное', color=VkKeyboardColor.POSITIVE, payload={"type": "in_favorites", "text": "Добавлено"})
         keyboard.add_callback_button(label=f'{black_lst}В чёрный список', color=VkKeyboardColor.SECONDARY, payload={"type": "in_black_lst", "text": "Добавлено"})
         keyboard.add_line()
@@ -38,7 +38,7 @@ class UserKeyboard:
         return keyboard
 
     @staticmethod
-    def get_keyboard(type_keyboard: str):
+    def in_keyboard(type_keyboard: str):
         if type_keyboard == 'menu':
             keyboard = UserKeyboard.keyboard_menu()
         elif type_keyboard == 'search':

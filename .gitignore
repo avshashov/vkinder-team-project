@@ -1,2 +1,11 @@
 .idea/
 config.py
+modules/utils.py
+modules/main.py
+modules/logic.py
+modules/keyboard.py
+modules/main.py
+modules/data.py
+modules/ClassVK.py
+main.py
+modules/__init__.py
