@@ -1,7 +1,6 @@
 from datetime import datetime
 import requests
 from vkinderdb.db_functions import VkinderDB
-from vkinderdb import db_auth
 from vk_auth import TOKEN
 
 
@@ -10,7 +9,7 @@ class VKInfo:
     def __init__(self, access_token, user_id):
         self.token = access_token
         self.id = user_id
-        self.params = {'access_token': self.token, 'v': 5.131}
+        self.params = {'access_token': self.token, 'v': 5.131, 'lang': 'ru'}
 
     def get_user_info(self):
         url = 'https://api.vk.com/method/users.get'
