@@ -1,6 +1,7 @@
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 import emoji
-from api.keyboard_setings import settings
+
+settings = dict(one_time=False, inline=False)
 
 class UserKeyboard:
 
@@ -36,7 +37,7 @@ class UserKeyboard:
         keyboard.add_button(label=f'{repeat}Изменить критерии поиска', color=VkKeyboardColor.SECONDARY)
         # keyboard.add_button(label='В чёрный список', color=VkKeyboardColor.SECONDARY)
         keyboard.add_line()
-        keyboard.add_button(label='Назад', color=VkKeyboardColor.NEGATIVE)
+        keyboard.add_button(label='Назад', color=VkKeyboardColor.SECONDARY)
         return keyboard
 
     @staticmethod
@@ -45,7 +46,7 @@ class UserKeyboard:
         keyboard = VkKeyboard(**settings)
         keyboard.add_button(label=f'{check_mark}Удалить из избранного', color=VkKeyboardColor.PRIMARY)
         keyboard.add_line()
-        keyboard.add_button(label='Назад', color=VkKeyboardColor.NEGATIVE)
+        keyboard.add_button(label='Назад', color=VkKeyboardColor.SECONDARY)
         return keyboard
 
     @staticmethod
@@ -54,5 +55,5 @@ class UserKeyboard:
         keyboard = VkKeyboard(**settings)
         # keyboard.add_button(label=f'{check_mark}Готово!', color=VkKeyboardColor.PRIMARY)
         # keyboard.add_line()
-        keyboard.add_button(label='Назад', color=VkKeyboardColor.NEGATIVE)
+        keyboard.add_button(label='Назад', color=VkKeyboardColor.SECONDARY)
         return keyboard
