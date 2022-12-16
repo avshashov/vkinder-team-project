@@ -24,15 +24,16 @@ class UserKeyboard:
     @staticmethod
     def keyboard_search():
         # left_arrow = emoji.emojize(":left_arrow:")
-        # right_arrow = emoji.emojize(":right_arrow:")
-        # star = emoji.emojize(":glowing_star:")
+        right_arrow = emoji.emojize(":right_arrow:")
+        star = emoji.emojize(":glowing_star:")
+        repeat = emoji.emojize(":repeat_button:")
         # black_lst = emoji.emojize(":black_nib:")
         keyboard = VkKeyboard(**settings)
         # keyboard.add_button(label='Предыдущий', color=VkKeyboardColor.PRIMARY)
-        keyboard.add_button(label='Следующий', color=VkKeyboardColor.PRIMARY)
+        keyboard.add_button(label=f'{right_arrow}Следующий', color=VkKeyboardColor.PRIMARY)
         keyboard.add_line()
-        keyboard.add_button(label='В избранное', color=VkKeyboardColor.POSITIVE)
-        keyboard.add_button(label='Изменить критерии поиска', color=VkKeyboardColor.SECONDARY)
+        keyboard.add_button(label=f'{star}В избранное', color=VkKeyboardColor.POSITIVE)
+        keyboard.add_button(label=f'{repeat}Изменить критерии поиска', color=VkKeyboardColor.SECONDARY)
         # keyboard.add_button(label='В чёрный список', color=VkKeyboardColor.SECONDARY)
         keyboard.add_line()
         keyboard.add_button(label='Назад', color=VkKeyboardColor.NEGATIVE)
@@ -52,4 +53,6 @@ class UserKeyboard:
         check_mark = emoji.emojize(":check_mark:")
         keyboard = VkKeyboard(**settings)
         keyboard.add_button(label=f'{check_mark}Готово!', color=VkKeyboardColor.PRIMARY)
+        keyboard.add_line()
+        keyboard.add_button(label='Назад', color=VkKeyboardColor.NEGATIVE)
         return keyboard

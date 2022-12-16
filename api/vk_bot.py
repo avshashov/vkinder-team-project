@@ -29,7 +29,7 @@ class VkBot:
             if self.user_id:
                 if self.event.type == VkEventType.MESSAGE_NEW and self.event.to_me:
                     # Если пришло новое сообщение
-                    if self.event.text.lower() in ('старт', 'назад'):
+                    if self.event.text.lower() == 'старт':
                         keyboard = UserKeyboard.keyboard_menu()
                         self.sender(user_id=self.user_id, message='Привет это бот VKinder!!!', keyboard=keyboard)
                         self.new_user()
@@ -37,7 +37,7 @@ class VkBot:
                         keyboard = UserKeyboard.keyboard_search()
                         self.sender(user_id=self.user_id, message='Начинаем поиск', keyboard=keyboard)
                         self.find_users()
-                    if self.event.text.lower() in ('✅задать критерии поиска', 'изменить критерии поиска'):
+                    if self.event.text.lower() in ('✅задать критерии поиска', '🔁изменить критерии поиска'):
                         keyboard = UserKeyboard.search_ok()
                         self.sender(user_id=self.user_id, message='Укажите пол, возраст и город проживания предпологаемой пары:', keyboard=keyboard)
                         self.search_params()
@@ -45,13 +45,19 @@ class VkBot:
                         keyboard = UserKeyboard.favorites()
                         self.sender(user_id=self.user_id, message='Список избранных пользователей:', keyboard=keyboard)
                         self.favourites()
-                        if self.event.text == '✔Готово!':#разобратся почемк не срабатывает этот ключ
-                            keyboard = UserKeyboard.keyboard_search()
-                            self.sender(user_id=self.user_id, message='Начинаем поиск', keyboard=keyboard)
-                            self.find_users()
-
-
-
+                    if self.event.text == '✔Готово!':#разобратся почему не срабатывает этот ключ
+                        keyboard = UserKeyboard.keyboard_search()
+                        self.sender(user_id=self.user_id, message='Начинаем поиск', keyboard=keyboard)
+                        self.find_users()
+                    if self.event.text == '➡Следующий':
+                        self.sender(user_id=self.user_id, message='', keyboard=keyboard)
+                        self.find_users()
+                    if self.event.text == '🌟В избранное':
+                        self.sender(user_id=self.user_id, message='Добавили в избранное', keyboard=keyboard)
+                        self.favourites()
+                    if self.event.text.lower() == 'назад':
+                        keyboard = UserKeyboard.keyboard_menu()
+                        self.sender(user_id=self.user_id, message='Главное меню', keyboard=keyboard)
 
 
 
@@ -76,7 +82,7 @@ class VkBot:
 
 
     '''Функция добавления в черный список (взаимодействует с модулем обращений к БД)'''
-    def black_lst(self, user_id):
+    def black_lst(self):
         pass
 
     '''Функция показа списка избранное (взаимодействует с модулем обращений к БД)'''
