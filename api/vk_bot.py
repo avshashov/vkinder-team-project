@@ -54,7 +54,7 @@ class VkBot:
                         self.find_users()
                     if self.event.text == '🌟В избранное':
                         self.sender(user_id=self.user_id, message='Добавили в избранное', keyboard=keyboard)
-                        self.favourites()
+                        self.add_favourites()
                     if self.event.text.lower() == 'назад':
                         keyboard = UserKeyboard.keyboard_menu()
                         self.sender(user_id=self.user_id, message='Главное меню', keyboard=keyboard)
@@ -81,8 +81,8 @@ class VkBot:
 
 
 
-    '''Функция добавления в черный список (взаимодействует с модулем обращений к БД)'''
-    def black_lst(self):
+    '''Функция добавления в избранное (взаимодействует с модулем обращений к БД)'''
+    def add_favourites(self):
         pass
 
     '''Функция показа списка избранное (взаимодействует с модулем обращений к БД)'''
