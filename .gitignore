@@ -1,5 +1,5 @@
 .idea/
-config.py
+vk_auth.py
 modules/utils.py
 modules/main.py
 modules/logic.py

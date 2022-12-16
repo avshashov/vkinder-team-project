@@ -52,7 +52,7 @@ class UserKeyboard:
     def search_ok():
         check_mark = emoji.emojize(":check_mark:")
         keyboard = VkKeyboard(**settings)
-        keyboard.add_button(label=f'{check_mark}Готово!', color=VkKeyboardColor.PRIMARY)
-        keyboard.add_line()
+        # keyboard.add_button(label=f'{check_mark}Готово!', color=VkKeyboardColor.PRIMARY)
+        # keyboard.add_line()
         keyboard.add_button(label='Назад', color=VkKeyboardColor.NEGATIVE)
         return keyboard

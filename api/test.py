@@ -2,7 +2,7 @@ from random import randrange
 import vk_api
 import random
 from vk_api.longpoll import VkLongPoll, VkEventType
-from config import vk_group_token, gr_token
+from vk_auth import vk_group_token, gr_token
 from keyboard import UserKeyboard
 from keyboard_setings import keyboard_cmd
 
