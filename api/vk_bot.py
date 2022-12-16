@@ -60,7 +60,7 @@ class VkBot:
                         self.sender(user_id=self.user_id, message='Главное меню', keyboard=keyboard)
                     if self.event.text == '❌Удалить из избранного':
                         self.sender(user_id=self.user_id, message='Удалили', keyboard=keyboard)
-                        self.del_favourites()   
+                        self.del_favourites()
 
 
     '''функция ответа на сообщения'''
