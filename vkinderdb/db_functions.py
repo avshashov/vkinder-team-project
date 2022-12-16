@@ -48,6 +48,18 @@ class VkinderDB:
                                             """, (user_data['user_id'], photos)
                                 )
 
+    def search_params_exists(self, user_id):
+        with self.connect as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                                SELECT user_id
+                                FROM search_params
+                                WHERE user_id = %s;
+                            """, (user_id,)
+                            )
+                res = cur.fetchone()
+        return bool(res)
+
     def add_search_params(self, params):
         '''Добавить/обновить критерии поиска пары.'''
         with self.connect as conn:
@@ -101,8 +113,9 @@ class VkinderDB:
         with self.connect as conn:
             with conn.cursor() as cur:
                 cur.execute("""
-                                SELECT name, surname, url
-                                FROM users
+                                SELECT name, surname, url, photo_ids
+                                FROM users 
+                                    JOIN user_photos USING(user_id)
                                 WHERE user_id IN (
                                                   SELECT partner_id
                                                   FROM favorites_users
