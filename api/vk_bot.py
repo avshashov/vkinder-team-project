@@ -1,27 +1,24 @@
 from random import randrange
 import vk_api
-from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from vk_api.longpoll import VkLongPoll, VkEventType
 import vk_api_.vk_info
-import vkinderdb.db_functions
-from config import vk_group_token, gr_token
+from config import alt_token, service_key
 from keyboard import UserKeyboard
-from keyboard_setings import keyboard_cmd, callback_typs
 from vkinderdb import main, db_functions
 
 
 
 '''Создаем класс бота'''
 class VkBot:
-    def __init__(self, token):
+    def __init__(self, token, service_key):
         self.vk_session = vk_api.VkApi(token=token)
+        self.user_id = self.get_user_id()
 
     def get_user_id(self):
         try:
             for self.event in VkLongPoll(self.vk_session).listen():
                 if self.event.type == VkEventType.MESSAGE_NEW and self.event.to_me:
-                    self.user_id = self.event.user_id
-                    return self.user_id
+                    return self.event.user_id
         except Exception as ex:
             print(ex)
 
@@ -29,32 +26,32 @@ class VkBot:
 
     def launch_bot(self):
         for self.event in VkLongPoll(self.vk_session).listen():
-            self.user_id = self.get_user_id()
             if self.user_id:
-                if self.event.type == VkEventType.MESSAGE_NEW:
+                if self.event.type == VkEventType.MESSAGE_NEW and self.event.to_me:
                     # Если пришло новое сообщение
-                    if self.event.text != '':
-                        if self.event.from_user:
-                            keyboard = UserKeyboard.keyboard_menu()
-                            self.sender(user_id=self.user_id, message='Привет это бот VKinder!!!', keyboard=keyboard)
-                            self.command_button()
-                if self.event.type == VkBotEventType.MESSAGE_EVENT:
-                    if self.object.payload.get('type') in callback_typs:
-                        if self.event.object.payload.get('type') == 'show_snackbar':
-                            if 'черный' in self.event.object.payload.get('text'):
-                                self.add_black_list(self.event.object.user_id)
-                            elif 'избранное' in self.event.object.payload.get('text'):
-                                self.add_favourites(self.event.object.user_id)
-    def command_button(self):
-        key = keyboard_cmd.get('key')
-        if key == 'search':
-            keyboard = UserKeyboard.keyboard_search()
-            self.vk_session.method('messages.sendMessageEventAnswer', {
-                'event_id': str,
-                'user_id': self.get_user_id(),
-                'peer_id': int
-            })
-            self.find_a_couple()
+                    if self.event.text.lower() in ('старт', 'назад'):
+                        keyboard = UserKeyboard.keyboard_menu()
+                        self.sender(user_id=self.user_id, message='Привет это бот VKinder!!!', keyboard=keyboard)
+                        self.new_user()
+                    if self.event.text.lower() == '💗найти пару':
+                        keyboard = UserKeyboard.keyboard_search()
+                        self.sender(user_id=self.user_id, message='Начинаем поиск', keyboard=keyboard)
+                        self.find_users()
+                    if self.event.text.lower() in ('✅задать критерии поиска', 'изменить критерии поиска'):
+                        keyboard = UserKeyboard.search_ok()
+                        self.sender(user_id=self.user_id, message='Укажите пол, возраст и город проживания предпологаемой пары:', keyboard=keyboard)
+                        self.search_params()
+                    if self.event.text.lower() == '🌟избранное':
+                        keyboard = UserKeyboard.favorites()
+                        self.sender(user_id=self.user_id, message='Список избранных пользователей:', keyboard=keyboard)
+                        self.favourites()
+                        if self.event.text == '✔Готово!':#разобратся почемк не срабатывает этот ключ
+                            keyboard = UserKeyboard.keyboard_search()
+                            self.sender(user_id=self.user_id, message='Начинаем поиск', keyboard=keyboard)
+                            self.find_users()
+
+
+
 
 
 
@@ -66,26 +63,37 @@ class VkBot:
         self.vk_session.method('messages.send', self.params)
 
     '''Функция поиска пары (взаимодействует с модулем обращений к БД)'''
-    def find_a_couple(self):
+    def find_users(self):
         pass
+        # keydoard = UserKeyboard.keyboard_search()
+        # find_db = db_functions.VkinderDB()
+        # users = find_db.find_a_couple(self.user_id)
+        # if len(users) > 0:
+        #     for user in users:
+        #         user = list(user)
+        #         self.sender(user_id=self.user_id, message=user[:-1], attachment=user[-1], keyboard=keydoard)
+
 
 
     '''Функция добавления в черный список (взаимодействует с модулем обращений к БД)'''
-    def add_black_lst(self, user_id):
+    def black_lst(self, user_id):
         pass
 
-    '''Функция добавления в избранное (взаимодействует с модулем обращений к БД)'''
-    def add_favourites(self, user_id):
+    '''Функция показа списка избранное (взаимодействует с модулем обращений к БД)'''
+    def favourites(self):
         pass
 
-    '''Функция получения результатов поиска '''
-    def search_result(self):
+    '''Функция получения настроек поиска '''
+    def search_params(self):
         pass
 
-
+    def new_user(self):
+        info_usr = vk_api_.vk_info.VKInfo(service_key, 268278600)
+        info_usr.get_user_info()
+        info_usr.get_photos()
 
 def main():
-    vk_client = VkBot(gr_token)
+    vk_client = VkBot(alt_token, service_key)
     vk_client.launch_bot()
 
 

@@ -11,38 +11,45 @@ class UserKeyboard:
     def keyboard_menu():
         search = emoji.emojize(":growing_heart:")
         star = emoji.emojize(":glowing_star:")
-        black_lst = emoji.emojize(":black_nib:")
+        check = emoji.emojize(":check_mark_button:")
+        # black_lst = emoji.emojize(":black_nib:")
         keyboard = VkKeyboard(**settings)
-        keyboard.add_callback_button(label=f'{search}Поиск', color=VkKeyboardColor.POSITIVE, payload={"type": "search", "text": "Поиск"})
+        keyboard.add_button(label=f'{check}Задать критерии поиска', color=VkKeyboardColor.SECONDARY)
+        keyboard.add_button(label=f'{search}Найти пару', color=VkKeyboardColor.SECONDARY)
         keyboard.add_line()
-        keyboard.add_callback_button(label=f'{star}Избранное', color=VkKeyboardColor.POSITIVE, payload={"type": "favorites", "text": "Избранное"})
-        keyboard.add_callback_button(label=f'{black_lst}Чёрный список', color=VkKeyboardColor.POSITIVE, payload={"type": "black_list", "text": "Черный список"})
-        keyboard.add_line()
-        keyboard.add_callback_button(label='Меню', color=VkKeyboardColor.NEGATIVE, payload={"type": "menu"})
+        keyboard.add_button(label=f'{star}Избранное', color=VkKeyboardColor.POSITIVE)
+        # keyboard.add_button(label='Чёрный список', color=VkKeyboardColor.POSITIVE)
         return keyboard
 
     @staticmethod
     def keyboard_search():
-        left_arrow = emoji.emojize(":left_arrow:")
-        right_arrow = emoji.emojize(":right_arrow:")
-        star = emoji.emojize(":glowing_star:")
-        black_lst = emoji.emojize(":black_nib:")
+        # left_arrow = emoji.emojize(":left_arrow:")
+        # right_arrow = emoji.emojize(":right_arrow:")
+        # star = emoji.emojize(":glowing_star:")
+        # black_lst = emoji.emojize(":black_nib:")
         keyboard = VkKeyboard(**settings)
-        keyboard.add_callback_button(label=f'{left_arrow}Предыдущий', color=VkKeyboardColor.PRIMARY, payload={"type": "previous", "text": "Ищем"})
-        keyboard.add_callback_button(label=f'{right_arrow}Следующий', color=VkKeyboardColor.PRIMARY, payload={"type": "next", "text": "Ищем"})
+        # keyboard.add_button(label='Предыдущий', color=VkKeyboardColor.PRIMARY)
+        keyboard.add_button(label='Следующий', color=VkKeyboardColor.PRIMARY)
         keyboard.add_line()
-        keyboard.add_callback_button(label=f'{star}В избранное', color=VkKeyboardColor.POSITIVE, payload={"type": "in_favorites", "text": "Добавлено"})
-        keyboard.add_callback_button(label=f'{black_lst}В чёрный список', color=VkKeyboardColor.SECONDARY, payload={"type": "in_black_lst", "text": "Добавлено"})
+        keyboard.add_button(label='В избранное', color=VkKeyboardColor.POSITIVE)
+        keyboard.add_button(label='Изменить критерии поиска', color=VkKeyboardColor.SECONDARY)
+        # keyboard.add_button(label='В чёрный список', color=VkKeyboardColor.SECONDARY)
         keyboard.add_line()
-        keyboard.add_callback_button(label='Меню', color=VkKeyboardColor.NEGATIVE, payload={"type": "menu"})
+        keyboard.add_button(label='Назад', color=VkKeyboardColor.NEGATIVE)
         return keyboard
 
     @staticmethod
-    def in_keyboard(type_keyboard: str):
-        if type_keyboard == 'menu':
-            keyboard = UserKeyboard.keyboard_menu()
-        elif type_keyboard == 'search':
-            keyboard = UserKeyboard.keyboard_search()
-        else:
-            keyboard = UserKeyboard.keyboard_menu()
-        return keyboard.get_keyboard()
+    def favorites():
+        check_mark = emoji.emojize(":cross_mark:")
+        keyboard = VkKeyboard(**settings)
+        keyboard.add_button(label=f'{check_mark}Удалить из избранного', color=VkKeyboardColor.PRIMARY)
+        keyboard.add_line()
+        keyboard.add_button(label='Назад', color=VkKeyboardColor.NEGATIVE)
+        return keyboard
+
+    @staticmethod
+    def search_ok():
+        check_mark = emoji.emojize(":check_mark:")
+        keyboard = VkKeyboard(**settings)
+        keyboard.add_button(label=f'{check_mark}Готово!', color=VkKeyboardColor.PRIMARY)
+        return keyboard
