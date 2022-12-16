@@ -39,7 +39,9 @@ class VkBot:
 
     def _check_search_params(self, user_id):
         '''Проверить наличие параметров поиска в БД'''
-        return VkinderDB(self.user_db, self.password_db).search_params_exists(user_id)
+        if not VkinderDB(self.user_db, self.password_db).search_params_exists(user_id):
+            pass
+        return
 
 
 bot = VkBot(token_group, service_key, user_db, password_db)
