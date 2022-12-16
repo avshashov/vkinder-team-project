@@ -58,7 +58,9 @@ class VkBot:
                     if self.event.text.lower() == 'назад':
                         keyboard = UserKeyboard.keyboard_menu()
                         self.sender(user_id=self.user_id, message='Главное меню', keyboard=keyboard)
-
+                    if self.event.text == '❌Удалить из избранного':
+                        self.sender(user_id=self.user_id, message='Удалили', keyboard=keyboard)
+                        self.del_favourites()   
 
 
     '''функция ответа на сообщения'''
@@ -97,6 +99,9 @@ class VkBot:
         info_usr = vk_api_.vk_info.VKInfo(service_key, 268278600)
         info_usr.get_user_info()
         info_usr.get_photos()
+
+    def del_favourites(self):
+        pass
 
 def main():
     vk_client = VkBot(alt_token, service_key)
