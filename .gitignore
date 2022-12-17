@@ -1,4 +1,3 @@
 .idea/
 vk/vk_auth.py
 config.py
-vk/vk_parser.py
