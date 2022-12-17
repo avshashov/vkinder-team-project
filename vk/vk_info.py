@@ -27,7 +27,7 @@ class VKInfo:
                 self.id = user_json['response'][0]['id']
                 name = user_json['response'][0]['first_name']
                 surname = user_json['response'][0]['last_name']
-                sex = 'Женский' if user_json['response'][0]['sex'] == 1 else 'Мужской'
+                sex = 'женский' if user_json['response'][0]['sex'] == 1 else 'мужской'
                 city = self._parse_city(user_json)
                 url = f'https://vk.com/id{user_json["response"][0]["id"]}'
                 age = self._age_format(self._parse_bdate(user_json))
@@ -53,7 +53,7 @@ class VKInfo:
             print('[ERROR] В профиле пользователя скрыт один из параметров: дата/год рождения.')
             vk_error = VkBot(alt_token, service_key)
             vk_error.sender(user_id=vk_error.user_id,
-                         message='В вашем пользователя скрыт один из параметров: дата/год рождения. Откройте их для корректной работы бота!')
+                         message='В вашем профиле скрыт один из параметров: дата/год рождения. Откройте их для корректной работы бота!')
 
     def _age_format(self, bdate):
         if bdate:

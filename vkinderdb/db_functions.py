@@ -1,8 +1,10 @@
-import psycopg
+import psycopg2
+
 
 class VkinderDB:
+
     def __init__(self, user, password):
-        self.connect = psycopg.connect(database='vkinder', user=user, password=password)
+        self.connect = psycopg2.connect(database='vkinder', user=user, password=password)
 
     def add_new_user(self, user_data, photos):
         '''Добавить/обновить пользователя в БД.'''
@@ -46,6 +48,18 @@ class VkinderDB:
                                     VALUES (%s, %s);
                                             """, (user_data['user_id'], photos)
                                 )
+
+    def search_params_exists(self, user_id):
+        with self.connect as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                                SELECT user_id
+                                FROM search_params
+                                WHERE user_id = %s;
+                            """, (user_id,)
+                            )
+                res = cur.fetchone()
+        return bool(res)
 
     def add_search_params(self, params):
         '''Добавить/обновить критерии поиска пары.'''
@@ -101,7 +115,8 @@ class VkinderDB:
             with conn.cursor() as cur:
                 cur.execute("""
                                 SELECT name, surname, url
-                                FROM users
+                                FROM users 
+                                    JOIN user_photos USING(user_id)
                                 WHERE user_id IN (
                                                   SELECT partner_id
                                                   FROM favorites_users
@@ -125,7 +140,7 @@ class VkinderDB:
                 search_params = cur.fetchone()
 
                 cur.execute("""
-                                SELECT name, surname, age, url, photo_ids
+                                SELECT user_id, name, surname, age, url, photo_ids
                                 FROM users 
                                     JOIN user_photos USING(user_id)
                                 WHERE user_id != %s 

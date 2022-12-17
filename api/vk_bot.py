@@ -47,7 +47,7 @@ class VkBot:
                         self.favourites()
                     if self.event.text == '➡Следующий':
                         self.sender(user_id=self.user_id, message='', keyboard=keyboard)
-                        self.find_users()
+                        self._return_pair(self.user_id)
                     if self.event.text == '🌟В избранное':
                         self.sender(user_id=self.user_id, message='Добавили в избранное', keyboard=keyboard)
                         self.add_favourites()
@@ -60,50 +60,43 @@ class VkBot:
 
 
     '''функция ответа на сообщения'''
-    def sender(self, user_id, message, keyboard=None):
+    def sender(self, user_id, message, keyboard=None, attachment=None):
         self.params = {'user_id': user_id, 'message': message, 'random_id': randrange(10 ** 7)}
         if keyboard != None:
             self.params['keyboard'] = keyboard.get_keyboard()
         self.vk_session.method('messages.send', self.params)
 
-    '''Функция поиска пары (взаимодействует с модулем обращений к БД)'''
-    def find_users(self):
-        pass
-        # keydoard = UserKeyboard.keyboard_search()
-        # find_db = db_functions.VkinderDB()
-        # users = find_db.find_a_couple(self.user_id)
-        # if len(users) > 0:
-        #     for user in users:
-        #         user = list(user)
-        #         self.sender(user_id=self.user_id, message=user[:-1], attachment=user[-1], keyboard=keydoard)
-
-
 
     '''Функция добавления в избранное (взаимодействует с модулем обращений к БД)'''
     def add_favourites(self):
-        pass
-
-    '''Функция показа списка избранное (взаимодействует с модулем обращений к БД)'''
-    def favourites(self):
-        # show_favourites = db_functions.VkinderDB(user=user_db, password=password_db)
-        # favourites_users = show_favourites.show_favorites_users(finder_id=self.user_id)
-        # if len(favourites_users) > 0:
-        #     keyboard = UserKeyboard.favorites()
-        #     self.sender(user_id=self.user_id, message=favourites_users, keyboard=keyboard)
-        # else:
-        #     self.sender(user_id=self.user_id, message='Список пуст')
-        pass
+        db = VkinderDB(user=user_db, password=password_db)
+        db.add_to_favorites(self.user_id, self.partner_id)
 
     '''Функция удаления из избранного (взаимодействует с модулем обращений к БД)'''
     def del_favourites(self):
         pass
 
+    '''Функция показа списка избранное (взаимодействует с модулем обращений к БД)'''
+    def favourites(self):
+        show_favourites = db_functions.VkinderDB(user=user_db, password=password_db)
+        favourites_users = show_favourites.show_favorites_users(finder_id=self.user_id)
+        if len(favourites_users) > 0:
+            result = ','.join([','.join(list(user)) for user in favourites_users])
+            keyboard = UserKeyboard.favorites()
+            self.sender(user_id=self.user_id, message=result, keyboard=keyboard)
+        else:
+            self.sender(user_id=self.user_id, message='Список пуст')
+        # pass
+
+
+
+
     '''Проверить наличие параметров поиска в БД'''
     def _check_search_params(self, user_id):
-        # if not VkinderDB(self.user_db, self.password_db).search_params_exists(user_id):
-        #     self.sender(user_id=self.user_id, message='Задайте параметры поиска')
-        # return
-        pass
+        if not VkinderDB(user_db, password_db).search_params_exists(user_id):
+            self.sender(user_id=self.user_id, message='Задайте параметры поиска')
+        return
+
 
     '''Функция получения настроек поиска '''
     def search_params(self):
@@ -111,37 +104,79 @@ class VkBot:
         self.sender(user_id=self.user_id, message='Возраст от... (число)')
         for self.event in VkLongPoll(self.vk_session).listen():
             if self.event.type == VkEventType.MESSAGE_NEW and self.event.to_me:
-                if self.event.text.isdigit():
-                    params['from_age'] = self.event.text
-                    break
+                age_from = self.event.text
+                if age_from.isdigit():
+                    age_from = int(age_from)
+                    if age_from >= 18:
+                        params['from_age'] = age_from
+                        break
+                else:
+                    self.sender(user_id=self.user_id, message='Некорректный ввод, повторите попытку.')
 
         self.sender(user_id=self.user_id, message='Возраст до... (число) ')
         for self.event in VkLongPoll(self.vk_session).listen():
             if self.event.type == VkEventType.MESSAGE_NEW and self.event.to_me:
-                if self.event.text.isdigit():
-                    params['to_age'] = self.event.text
-                    break
+                age_to = self.event.text
+                if age_to.isdigit():
+                    age_to = int(age_to)
+                    if age_to >= 18:
+                        params['to_age'] = age_to
+                        break
+                else:
+                    self.sender(user_id=self.user_id, message='Некорректный ввод, повторите попытку.')
 
-        self.sender(user_id=self.user_id, message='Пол (мужчина или женщина)')
+        self.sender(user_id=self.user_id, message='Пол (женский или мужской)')
         for self.event in VkLongPoll(self.vk_session).listen():
             if self.event.type == VkEventType.MESSAGE_NEW and self.event.to_me:
-                if self.event.text.lower() != '':
-                    params['sex'] = self.event.text
+                gender = self.event.text.lower()
+                if gender in ['женский', 'мужской']:
+                    params['sex'] = gender
                     break
+                else:
+                    self.sender(user_id=self.user_id, message='Некорректный ввод, повторите попытку.')
 
         self.sender(user_id=self.user_id, message='Город ')
         for self.event in VkLongPoll(self.vk_session).listen():
             if self.event.type == VkEventType.MESSAGE_NEW and self.event.to_me:
-                if self.event.text.lower() != '':
-                    params['city'] = self.event.text
+                if self.event.text != '':
+                    params['city'] = self.event.text.title()
                     break
+                else:
+                    self.sender(user_id=self.user_id, message='Некорректный ввод, повторите попытку.')
         params['user_id'] = self.user_id
-        # params_db = db_functions.VkinderDB(user=user_db, password=password_db)
-        # params_db.add_search_params(params=params)
-        self.sender(user_id=self.user_id, message='Все заполненно, нажмите кнопку "Назад", а затем "Найти пару"!')
 
+        params_db = db_functions.VkinderDB(user=user_db, password=password_db)
+        params_db.add_search_params(params=params)
+        self.sender(user_id=self.user_id, message='Данные получены, нажмите кнопку "Назад", а затем "Найти пару"!')
+        self._download_pairs(self.user_id)
 
+    def _return_pair(self, user_id):
+        try:
+            pair = next(self.pair_iter)
+            print(pair)
+            if len(pair) > 0:
+                user = list(pair)
+                self.sender(user_id=self.user_id, message=user[1:-1], attachment=user[-1])
+                self.partner_id = user[0]
+            else:
+                self.sender(user_id=self.user_id,
+                            message='Никто не найден, проверьте корректность критериев поиска и повторите попытку.')
+        except StopIteration:
+            self._download_pairs(user_id)
+            pair = next(self.pair_iter)
+            if len(pair) > 0:
+                user = list(pair)
+                self.sender(user_id=self.user_id, message=user[1:-1], attachment=user[-1])
+                self.partner_id = user[0]
+            else:
+                self.sender(user_id=self.user_id, message='Никто не найден, проверьте корректность критериев поиска и повторите попытку.')
+            print(pair)
 
+    def _download_pairs(self, user_id):
+        # Функция должна быть внутри search_params()
+        db = VkinderDB(user_db, password_db)
+        self.pairs = db.find_a_couple(user_id)
+        self.pair_iter = iter(self.pairs)
 
     def new_user(self):
         info_usr = vk.vk_info.VKInfo(service_key, self.user_id)
