@@ -1,7 +1,5 @@
 from datetime import datetime
 import requests
-from vkinderdb.db_functions import VkinderDB
-from vk_auth import TOKEN
 
 
 class VKInfo:
@@ -74,14 +72,13 @@ class VKInfo:
 
         try:
             photos_json = requests.get(url, params={**self.params, **photo_params}).json()
-            # print(photos_json)
             # Возможна долгая отработка цикла при большом количестве фоток, оптимизировать
             photos = [{'media_id': photo['id'], 'likes_count': photo['likes']['count']} for photo in
                       photos_json['response']['items']]
             photos = sorted(photos, key=lambda photo: photo['likes_count'], reverse=True)[:3]
             attachment = self._photo_processing(photos)
 
-            print(attachment)  # удалить строку
+            # print(attachment)  # удалить строку
             return (attachment)
 
         except Exception as ex:
@@ -90,19 +87,3 @@ class VKInfo:
     def _photo_processing(self, photos):
         res = ','.join([f"{'photo'}{self.id}_{photo['media_id']}" for photo in photos])
         return res
-
-# vk = VKInfo(TOKEN, 'loli_katze')
-# vk = VKInfo(TOKEN, 'marialldl')
-# vk = VKInfo(TOKEN, 'murz727')
-# vk = VKInfo(TOKEN, 'borodina_y')
-# vk = VKInfo(TOKEN, 108062987)
-# vk = VKInfo(TOKEN, 'yvkey')
-# vk = VKInfo(TOKEN, 80821257)
-# vk = VKInfo(TOKEN, 1559980)
-
-# vk = VKInfo(TOKEN, 268278600)
-# user_data = vk.get_user_info()
-# user_photo = vk.get_photos()
-
-# db = VkinderDB(db_auth.USER, db_auth.PASSWORD)
-# db.add_new_user(user_data, user_photo)

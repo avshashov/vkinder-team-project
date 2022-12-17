@@ -2,6 +2,7 @@ import psycopg2
 
 
 class VkinderDB:
+
     def __init__(self, user, password):
         self.connect = psycopg2.connect(database='vkinder', user=user, password=password)
 
