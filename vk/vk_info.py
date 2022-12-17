@@ -1,5 +1,7 @@
 from datetime import datetime
 import requests
+from api.vk_bot import VkBot
+from vk_auth import alt_token, service_key
 
 
 class VKInfo:
@@ -17,6 +19,9 @@ class VKInfo:
             user_json = requests.get(url, params={**self.params, **user_params}).json()
             if self._profile_is_closed(user_json):
                 print('[ERROR] Для корректной работы приложения сделайте профиль открытым :)')
+                vk_error = VkBot(alt_token, service_key)
+                vk_error.sender(user_id=vk_error.user_id,
+                             message='Для корректной работы приложения сделайте профиль открытым! :)')
 
             else:
                 self.id = user_json['response'][0]['id']
@@ -34,11 +39,11 @@ class VKInfo:
                     'url': url
                 }
                 print('[INFO] Информация о профиле получена.')
-                print(user_data)  # Удалить строку
                 return user_data
 
         except Exception as ex:
             print(f'[ERROR] {ex}')
+
 
     def _parse_bdate(self, user_json):
         try:
@@ -46,6 +51,9 @@ class VKInfo:
             return bdate
         except:
             print('[ERROR] В профиле пользователя скрыт один из параметров: дата/год рождения.')
+            vk_error = VkBot(alt_token, service_key)
+            vk_error.sender(user_id=vk_error.user_id,
+                         message='В вашем пользователя скрыт один из параметров: дата/год рождения. Откройте их для корректной работы бота!')
 
     def _age_format(self, bdate):
         if bdate:
@@ -62,6 +70,10 @@ class VKInfo:
             return city
         except:
             print('[ERROR] В профиле пользователя не указан город.')
+            vk_error = VkBot(alt_token, service_key)
+            vk_error.sender(user_id=vk_error.user_id,
+                         message='В вашем профиле не указан город, укажите его для корректной работы бота!')
+
             raise ValueError
 
     def get_photos(self):

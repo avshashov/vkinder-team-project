@@ -85,16 +85,21 @@ class VkBot:
 
     '''Функция показа списка избранное (взаимодействует с модулем обращений к БД)'''
     def favourites(self):
-        # show_favourites = db_functions.VkinderDB()
-        # show_favourites.show_favorites_users()
+        # show_favourites = db_functions.VkinderDB(user=user_db, password=password_db)
+        # favourites_users = show_favourites.show_favorites_users(finder_id=self.user_id)
+        # if len(favourites_users) > 0:
+        #     keyboard = UserKeyboard.favorites()
+        #     self.sender(user_id=self.user_id, message=favourites_users, keyboard=keyboard)
+        # else:
+        #     self.sender(user_id=self.user_id, message='Список пуст')
         pass
 
     '''Функция удаления из избранного (взаимодействует с модулем обращений к БД)'''
     def del_favourites(self):
         pass
 
+    '''Проверить наличие параметров поиска в БД'''
     def _check_search_params(self, user_id):
-        # '''Проверить наличие параметров поиска в БД'''
         # if not VkinderDB(self.user_db, self.password_db).search_params_exists(user_id):
         #     self.sender(user_id=self.user_id, message='Задайте параметры поиска')
         # return
@@ -144,6 +149,8 @@ class VkBot:
         photos = info_usr.get_photos()
         # params_db = db_functions.VkinderDB(user=user_db, password=password_db)
         # params_db.add_new_user(user_data, photos)
+
+
 
 
 
