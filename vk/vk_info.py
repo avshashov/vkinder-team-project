@@ -15,55 +15,48 @@ class VKInfo:
 
         try:
             user_json = requests.get(url, params={**self.params, **user_params}).json()
-
             if self._profile_is_closed(user_json):
                 print('[ERROR] Для корректной работы приложения сделайте профиль открытым :)')
-
+                return 1
             else:
-                self.id = user_json['response'][0]['id']
-                name = user_json['response'][0]['first_name']
-                surname = user_json['response'][0]['last_name']
-                sex = 'Женский' if user_json['response'][0]['sex'] == 1 else 'Мужской'
-                city = self._parse_city(user_json)
-                url = f'https://vk.com/id{user_json["response"][0]["id"]}'
-                age = self._age_format(self._parse_bdate(user_json))
+                try:
+                    self.id = user_json['response'][0]['id']
+                    name = user_json['response'][0]['first_name']
+                    surname = user_json['response'][0]['last_name']
+                    sex = 'женский' if user_json['response'][0]['sex'] == 1 else 'мужской'
+                    city = user_json['response'][0]['city']['title']
 
-                user_data = {
-                    'user_id': self.id, 'name': name,
-                    'surname': surname, 'sex': sex,
-                    'age': age, 'city': city,
-                    'url': url
-                }
-                print('[INFO] Информация о профиле получена.')
-                print(user_data)  # Удалить строку
-                return user_data
+                    url = f'https://vk.com/id{user_json["response"][0]["id"]}'
+                    age = self._age_format(self._parse_bdate(user_json))
+
+                    user_data = {
+                        'user_id': self.id, 'name': name,
+                        'surname': surname, 'sex': sex,
+                        'age': age, 'city': city,
+                        'url': url
+                    }
+                    print('[INFO] Информация о профиле получена.')
+                    return user_data
+                except:
+                    print('[ERROR] Ошибка получения информации о пользователе.'
+                          '\nВ профиле не указана дата рождения или город.')
+                    return 2
 
         except Exception as ex:
-            print(f'[ERROR] {ex}')
+            print(f'[ERROR] {ex}. Ошибка request-запроса для get_user_info.')
+            return
 
     def _parse_bdate(self, user_json):
-        try:
-            bdate = datetime.strptime(user_json['response'][0]['bdate'], '%d.%m.%Y')
-            return bdate
-        except:
-            print('[ERROR] В профиле пользователя скрыт один из параметров: дата/год рождения.')
+        bdate = datetime.strptime(user_json['response'][0]['bdate'], '%d.%m.%Y')
+        return bdate
 
     def _age_format(self, bdate):
-        if bdate:
-            age = int((datetime.now() - bdate).days / 365)
-            return age
-        raise ValueError
+        age = int((datetime.now() - bdate).days / 365)
+        return age
 
     def _profile_is_closed(self, user_json):
         return user_json['response'][0]['is_closed']
 
-    def _parse_city(self, user_json):
-        try:
-            city = user_json['response'][0]['city']['title']
-            return city
-        except:
-            print('[ERROR] В профиле пользователя не указан город.')
-            raise ValueError
 
     def get_photos(self):
         url = 'https://api.vk.com/method/photos.get'
@@ -72,17 +65,16 @@ class VKInfo:
 
         try:
             photos_json = requests.get(url, params={**self.params, **photo_params}).json()
-            # Возможна долгая отработка цикла при большом количестве фоток, оптимизировать
+
             photos = [{'media_id': photo['id'], 'likes_count': photo['likes']['count']} for photo in
                       photos_json['response']['items']]
             photos = sorted(photos, key=lambda photo: photo['likes_count'], reverse=True)[:3]
             attachment = self._photo_processing(photos)
 
-            # print(attachment)  # удалить строку
             return (attachment)
 
         except Exception as ex:
-            print(f'[ERROR] {ex}')
+            print(f'[ERROR] {ex}. Ошибка request-запроса для get_photos')
 
     def _photo_processing(self, photos):
         res = ','.join([f"{'photo'}{self.id}_{photo['media_id']}" for photo in photos])
