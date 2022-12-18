@@ -114,7 +114,7 @@ class VkinderDB:
         with self.connect as conn:
             with conn.cursor() as cur:
                 cur.execute("""
-                                SELECT name, surname, url, photo_ids
+                                SELECT name, surname, url
                                 FROM users 
                                     JOIN user_photos USING(user_id)
                                 WHERE user_id IN (
@@ -140,7 +140,7 @@ class VkinderDB:
                 search_params = cur.fetchone()
 
                 cur.execute("""
-                                SELECT name, surname, age, url, photo_ids
+                                SELECT user_id, name, surname, age, url, photo_ids
                                 FROM users 
                                     JOIN user_photos USING(user_id)
                                 WHERE user_id != %s 

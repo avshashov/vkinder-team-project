@@ -23,7 +23,7 @@ def friends_parser(user_id, user_token):
             bdate = datetime.strptime(friend['bdate'], '%d.%m.%Y')
             age = int((datetime.now() - bdate).days / 365)
             city = friend['city']['title']
-            sex = 'Женский' if friend['sex'] == 1 else 'Мужской'
+            sex = 'женский' if friend['sex'] == 1 else 'мужской'
             name = friend['first_name']
             surname = friend['last_name']
             url = f'https://vk.com/id{friend["id"]}'
