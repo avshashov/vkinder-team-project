@@ -10,14 +10,11 @@ class UserKeyboard:
 
     @staticmethod
     def keyboard_menu():
-        repeat = emoji.emojize(":repeat_button:")
         search = emoji.emojize(":growing_heart:")
         star = emoji.emojize(":glowing_star:")
         check = emoji.emojize(":check_mark_button:")
         keyboard = VkKeyboard(**settings)
         keyboard.add_button(label=f'{check}Задать критерии поиска', color=VkKeyboardColor.SECONDARY)
-        keyboard.add_line()
-        keyboard.add_button(label=f'{repeat}Изменить критерии поиска', color=VkKeyboardColor.SECONDARY)
         keyboard.add_line()
         keyboard.add_button(label=f'{search}Найти пару', color=VkKeyboardColor.SECONDARY)
         keyboard.add_line()
@@ -26,12 +23,15 @@ class UserKeyboard:
 
     @staticmethod
     def keyboard_search():
+        repeat = emoji.emojize(":repeat_button:")
         right_arrow = emoji.emojize(":right_arrow:")
         star = emoji.emojize(":glowing_star:")
         keyboard = VkKeyboard(**settings)
         keyboard.add_button(label=f'{right_arrow}Следующий', color=VkKeyboardColor.PRIMARY)
         keyboard.add_line()
         keyboard.add_button(label=f'{star}В избранное', color=VkKeyboardColor.POSITIVE)
+        keyboard.add_line()
+        keyboard.add_button(label=f'{repeat}Изменить критерии поиска', color=VkKeyboardColor.SECONDARY)
         keyboard.add_line()
         keyboard.add_button(label='Назад', color=VkKeyboardColor.SECONDARY)
         return keyboard

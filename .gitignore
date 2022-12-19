@@ -1,4 +1,4 @@
 .idea/
 vk/vk_auth.py
-vk/__pycache__
-vkinderdb/__pycache__
+vk/__pycache__/
+vkinderdb/__pycache__/
