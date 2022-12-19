@@ -66,7 +66,7 @@
 
 
 ## Структура таблиц
-![Структура таблиц](/home/darkus/GitHub/vkinder-team-project/vkinderdb/vkinder_scheme.png)
+![Структура таблиц](https://disk.yandex.ru/i/yCv41HOzjBWqig)
 ### Используемые библиотеки:
 - Библиотека [vk_api](https://pypi.org/project/vk-api/) - основная билиотека для постоения логики и взамодействия с ботом
 - Библиотека [requests](https://pypi.org/project/requests/) - используется для HTTP запросов
