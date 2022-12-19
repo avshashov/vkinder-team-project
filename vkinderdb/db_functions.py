@@ -94,10 +94,19 @@ class VkinderDB:
         with self.connect as conn:
             with conn.cursor() as cur:
                 cur.execute("""
-                                INSERT INTO favorites_users(finder_id, partner_id)
-                                VALUES (%s, %s);
+                                SELECT partner_id
+                                FROM favorites_users
+                                WHERE finder_id = %s AND partner_id = %s;
                                 """, (finder_id, partner_id)
                             )
+                res = cur.fetchone()
+
+                if not res:
+                    cur.execute("""
+                                    INSERT INTO favorites_users(finder_id, partner_id)
+                                    VALUES (%s, %s);
+                                    """, (finder_id, partner_id)
+                                )
 
     def del_from_favorites(self, finder_id, partner_id):
         '''Удалить пользователя из избранного.'''
