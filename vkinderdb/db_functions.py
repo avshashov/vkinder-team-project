@@ -158,4 +158,5 @@ class VkinderDB:
                             """, (user_id, *search_params)
                             )
                 res = cur.fetchall()
+
         return res

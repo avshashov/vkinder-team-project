@@ -12,7 +12,7 @@ def friends_parser(user_id, user_token):
     vk_params = {'access_token': user_token, 'v': 5.131, 'lang': 'ru'}
 
     friends_id = requests.get(url, params={**user_params, **vk_params}).json()
-
+    
     result = []
     for friend in tqdm(friends_id['response']['items']):
         try:
