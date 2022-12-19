@@ -1,11 +1,4 @@
 .idea/
-vk_auth.py
-modules/utils.py
-modules/main.py
-modules/logic.py
-modules/keyboard.py
-modules/main.py
-modules/data.py
-modules/ClassVK.py
-main.py
-modules/__init__.py
+vk/vk_auth.py
+vk/__pycache__
+vkinderdb/__pycache__

@@ -1,7 +1,7 @@
 from datetime import datetime
 import requests
 from tqdm import tqdm
-from vk_auth import service_key, user_db, password_db
+from vk.vk_auth import service_key, user_db, password_db
 from vk.vk_info import VKInfo
 from vkinderdb.db_functions import VkinderDB
 
