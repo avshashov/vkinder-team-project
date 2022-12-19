@@ -123,9 +123,8 @@ class VkinderDB:
         with self.connect as conn:
             with conn.cursor() as cur:
                 cur.execute("""
-                                SELECT name, surname, url
+                                SELECT user_id, name, surname, url
                                 FROM users 
-                                    JOIN user_photos USING(user_id)
                                 WHERE user_id IN (
                                                   SELECT partner_id
                                                   FROM favorites_users
