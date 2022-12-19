@@ -47,25 +47,21 @@ class VkBot:
                         self._return_pair()
 
                 if event.text == 'Следующий':
-                    if self.pairs is None:
-                        self.sender(user_id=self.user_id,
-                                    message='Никто не найден, проверьте корректность критериев поиска и повторите попытку.')
-                        continue
-                    self.sender(user_id=self.user_id, message='💗')
+                    if self.pairs:
+                        self.sender(user_id=self.user_id, message='💗')
                     self._return_pair()
 
                 if event.text.lower() == '🌟избранное':
                     keyboard = UserKeyboard.favorites()
                     self.sender(user_id=self.user_id, message='Список избранных пользователей:', keyboard=keyboard)
-                    self.show_favourites()
+                    self.show_favorites()
 
                 if event.text == '🌟В избранное':
                     self.sender(user_id=self.user_id, message='Пользователь добавлен в избранное', keyboard=keyboard)
-                    self.add_favourites()
+                    self.add_to_favorites()
 
-                # if event.text == '❌Удалить из избранного':
-                #     self.sender(user_id=self.user_id, message='Пользователь удален из избранного', keyboard=keyboard)
-                #     self.del_favourites()
+                if event.text == '❌Удалить из избранного':
+                    self.del_from_favorites()
 
                 if event.text.lower() == 'назад':
                     keyboard = UserKeyboard.keyboard_menu()
@@ -98,17 +94,39 @@ class VkBot:
                                                           'информацию: \n\n1) Дата рождения (формат ДД.ММ.ГГГГ); \n2) '
                                                           'Город.')
 
-    def add_favourites(self):
+    def add_to_favorites(self):
         '''Функция добавления в избранное (взаимодействует с модулем обращений к БД)'''
         VkBot.db.add_to_favorites(self.user_id, self.partner_id)
 
-    def show_favourites(self):
+    def del_from_favorites(self):
+        self.sender(user_id=self.user_id, message='Введите номер пользователя')
+        for event in VkLongPoll(self.vk_session).listen():
+            if event.type == VkEventType.MESSAGE_NEW and event.to_me:
+                number = event.text
+                if number.isdigit() and int(number) in self.favorites_ids:
+                    partner_id = int(self.favorites_ids[int(number)])
+                    VkBot.db.del_from_favorites(self.user_id, partner_id)
+                    self.sender(user_id=self.user_id, message='Пользователь удален из избранного')
+                    break
+                elif number == 'Назад':
+                    break
+                else:
+                    self.sender(user_id=self.user_id, message='Некорректный ввод. Повторите попытку.')
+                    continue
+
+    def show_favorites(self):
         '''Функция показа списка избранное (взаимодействует с модулем обращений к БД)'''
         favourites_users = VkBot.db.show_favorites_users(finder_id=self.user_id)
         if favourites_users:
-            result = '\n\n'.join(['\n'.join(list(user)) for user in favourites_users])
+            self.favorites_ids, result = {}, []
+            for number, user in enumerate(favourites_users, 1):
+                self.favorites_ids[number] = user[0]
+                result.append('\n'.join([f'{str(number)}.', *user[1:]]))
+
+            result = '\n\n'.join(result)
             keyboard = UserKeyboard.favorites()
             self.sender(user_id=self.user_id, message=result, keyboard=keyboard)
+
         else:
             self.sender(user_id=self.user_id, message='Список пуст')
 
@@ -176,23 +194,24 @@ class VkBot:
         VkBot.db.add_search_params(params=params)
         self.sender(user_id=self.user_id, message='Данные получены, нажмите кнопку "Назад", а затем "Найти пару"!')
 
+    def _output_pair(self, pair):
+        user = list(pair)
+        message = '\n'.join([str(param) for param in user[1:-1]])
+        self.sender(user_id=self.user_id, message=message, attachment=user[-1])
+        self.partner_id = user[0]
+
     def _return_pair(self):
         try:
             pair = next(self.pair_iter)
-            user = list(pair)
-            message = '\n'.join([str(param) for param in user[1:-1]])
-            self.sender(user_id=self.user_id, message=message, attachment=user[-1])
-            self.partner_id = user[0]
+            self._output_pair(pair=pair)
 
         except StopIteration:
             self._download_pairs()
 
             if self.pairs:
                 pair = next(self.pair_iter)
-                user = list(pair)
-                message = '\n'.join([str(param) for param in user[1:-1]])
-                self.sender(user_id=self.user_id, message=message, attachment=user[-1])
-                self.partner_id = user[0]
+                self._output_pair(pair=pair)
+
             else:
                 self.sender(user_id=self.user_id,
                             message='Никто не найден, проверьте корректность критериев поиска и повторите попытку.')
