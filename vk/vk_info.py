@@ -16,6 +16,7 @@ class VKInfo:
 
         try:
             user_json = requests.get(url, params={**self.params, **user_params}).json()
+            print(user_json)
             if self._profile_is_closed(user_json):
                 print('[ERROR] Для корректной работы приложения сделайте профиль открытым :)')
                 return 1
