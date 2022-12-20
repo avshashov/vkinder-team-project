@@ -10,6 +10,7 @@ class VKInfo:
         self.params = {'access_token': self.token, 'v': 5.131, 'lang': 'ru'}
 
     def get_user_info(self):
+        '''Функция получения информации со страницы пользователя.'''
         url = 'https://api.vk.com/method/users.get'
         user_params = {'user_ids': self.id, 'fields': 'bdate, city, sex'}
 
@@ -57,8 +58,8 @@ class VKInfo:
     def _profile_is_closed(self, user_json):
         return user_json['response'][0]['is_closed']
 
-
     def get_photos(self):
+        '''Функция получения 3х фотографий с наибольшим количеством лайков со страницы пользователя.'''
         url = 'https://api.vk.com/method/photos.get'
         photo_params = {'owner_id': self.id, 'album_id': 'profile',
                         'extended': 1}
