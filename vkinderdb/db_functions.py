@@ -50,6 +50,7 @@ class VkinderDB:
                                 )
 
     def search_params_exists(self, user_id):
+        '''Проверить, заданы ли критерии поиска для пользователя.'''
         with self.connect as conn:
             with conn.cursor() as cur:
                 cur.execute("""
@@ -158,5 +159,4 @@ class VkinderDB:
                             """, (user_id, *search_params)
                             )
                 res = cur.fetchall()
-
         return res
