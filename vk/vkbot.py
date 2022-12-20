@@ -30,8 +30,6 @@ class VkBot:
                     self._add_user_to_db()
 
                 if event.text in ('✅Задать критерии поиска', '🔁Изменить критерии поиска'):
-                    self._sender(user_id=self.user_id, message='Введите параметры поиска',
-                                 keyboard=VkBot.keyboard.search_ok())
                     self._get_search_params()
 
                 if event.text == '💗Найти пару':
@@ -131,63 +129,46 @@ class VkBot:
         '''Функция получает от пользователя критерии поиска и заносит их в базу данных.'''
 
         params = {}
-        self._sender(user_id=self.user_id, message='Возраст от... (число)')
+        text_message = 'Введите параметры поиска:\n' \
+                       '1. Возраст от (число)\n' \
+                       '2. Возраст до (число)\n' \
+                       '3. Пол (женский, мужской)\n' \
+                       '4. Город\n\n' \
+                       '' \
+                       'Пример ввода: 20 35 женский Москва\n\n'
+
+        self._sender(user_id=self.user_id, message=text_message,
+                     keyboard=VkBot.keyboard.search_ok())
+
         for event in VkLongPoll(self.vk_session).listen():
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                if event.text == 'Назад':
-                    return
-                age_from = event.text
-                if age_from.isdigit():
-                    age_from = int(age_from)
-                    if age_from >= 18:
-                        params['from_age'] = age_from
-                        break
+                user_input = event.text.lower().split()
+                if len(user_input) == 4:
+                    from_age, to_age, sex, city = user_input
+                    if from_age.isdigit() and to_age.isdigit() and (18 <= int(from_age) <= int(to_age)):
+                        params['from_age'] = int(from_age)
+                        params['to_age'] = int(to_age)
+
                     else:
-                        self._sender(user_id=self.user_id, message='Пользователь должен быть старше 18, '
-                                                                   'повторите попытку.')
-                else:
-                    self._sender(user_id=self.user_id, message='Некорректный ввод, повторите попытку.')
+                        self._sender(user_id=self.user_id, message='Некорректный ввод. '
+                                                                   'Начальный возраст должен быть не меньше 18.'
+                                                                   'Повторите попытку.')
+                        continue
 
-        self._sender(user_id=self.user_id, message='Возраст до... (число) ')
-        for event in VkLongPoll(self.vk_session).listen():
-            if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                if event.text == 'Назад':
-                    return
-                age_to = event.text
-                if age_to.isdigit():
-                    age_to = int(age_to)
-                    if age_to >= 18:
-                        params['to_age'] = age_to
-                        break
+                    if sex in ('женский', 'мужской'):
+                        params['sex'] = sex
+
                     else:
-                        self._sender(user_id=self.user_id, message='Пользователь должен быть старше 18, '
-                                                                   'повторите попытку.')
-                else:
-                    self._sender(user_id=self.user_id, message='Некорректный ввод, повторите попытку.')
+                        self._sender(user_id=self.user_id, message='Некорректный ввод. Неправильно указан пол.'
+                                                                   'Повторите попытку.')
+                        continue
 
-        self._sender(user_id=self.user_id, message='Пол (женский или мужской)')
-        for event in VkLongPoll(self.vk_session).listen():
-            if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                if event.text == 'Назад':
-                    return
-                gender = event.text.lower()
-                if gender in ('женский', 'мужской'):
-                    params['sex'] = gender
+                    params['city'] = city.title()
+                    params['user_id'] = self.user_id
                     break
-                else:
-                    self._sender(user_id=self.user_id, message='Некорректный ввод, повторите попытку.')
 
-        self._sender(user_id=self.user_id, message='Город ')
-        for event in VkLongPoll(self.vk_session).listen():
-            if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                if event.text == 'Назад':
-                    return
-                if event.text != '':
-                    params['city'] = event.text.title()
-                    break
                 else:
                     self._sender(user_id=self.user_id, message='Некорректный ввод, повторите попытку.')
-        params['user_id'] = self.user_id
 
         VkBot.db.add_search_params(params=params)
         self._sender(user_id=self.user_id, message='Данные получены, нажмите кнопку "Назад", а затем "Найти пару"!')

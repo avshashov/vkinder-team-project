@@ -54,4 +54,5 @@ def upload_friend_to_db(friends):
 
 
 if __name__ == '__main__':
-    upload_friend_to_db(friends_parser(108062987, user_token))
+    user_id = int(input())
+    upload_friend_to_db(friends_parser(user_id, user_token))
