@@ -90,6 +90,19 @@ class VkinderDB:
                                               params['city'])
                                 )
 
+    def get_search_params(self, user_id):
+        '''Получить критерии поиска пары'''
+        with self.connect as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                                SELECT from_age, to_age, sex, city
+                                FROM search_params
+                                WHERE user_id = %s;
+                                """, (user_id,)
+                            )
+                res = cur.fetchone()
+        return res
+
     def add_to_favorites(self, finder_id, partner_id):
         '''Добавить пользователя в избранное.'''
         with self.connect as conn:

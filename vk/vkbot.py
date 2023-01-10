@@ -174,7 +174,7 @@ class VkBot:
         self._sender(user_id=self.user_id, message='Данные получены, нажмите кнопку "Назад", а затем "Найти пару"!')
 
     def _download_pairs_from_db(self):
-        '''Функция получает из базы данных подхящих под критерии поиска партнеров и создает итератор.'''
+        '''Функция получает из базы данных подходящих под критерии поиска партнеров и создает итератор.'''
         self.pairs = VkBot.db.find_a_couple(self.user_id)
         self.pair_iter = iter([])
         if self.pairs:
