@@ -2,9 +2,10 @@ from random import randrange
 import vk_api
 from vk_api.longpoll import VkLongPoll, VkEventType
 from vk.vk_info import VKInfo
-from vk.vk_auth import token_group, service_key, user_db, password_db
+from vk.vk_auth import token_group, service_key, user_db, password_db, user_token
 from keyboard import UserKeyboard
 from vkinderdb.db_functions import VkinderDB
+from vk_parser import upload_friend_to_db, search_users
 
 
 class VkBot:
@@ -44,6 +45,7 @@ class VkBot:
                         continue
 
                     else:
+                        upload_friend_to_db(search_users(user_token=user_token, user_id=self.user_id))
                         self._download_pairs_from_db()
                         self._return_pair()
 
